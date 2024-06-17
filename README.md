@@ -128,8 +128,8 @@ systemd:
 2. Convert Butane file to MachineConfig YAML and Apply the MachineConfigs
 
 ```bash
-butane 99-worker-getty-ttyS0.bu -o 99-worker-getty-ttyS0.yaml
-oc apply -f 99-worker-getty-ttyS0.yaml
+$ butane 99-worker-getty-ttyS0.bu -o 99-worker-getty-ttyS0.yaml
+$ oc apply -f 99-worker-getty-ttyS0.yaml
 ```
 
 3. Monitor the MachineConfigPool and wait for the update to complete after the new configurations are applied. The status of the machineconfigpool will change to "Updated" once all nodes have applied the new configuration
@@ -142,5 +142,5 @@ oc apply -f 99-worker-getty-ttyS0.yaml
 - Baud Rate: Set the baud rate to 115.2kbps (115200 bps)
 - Com Port: Choose the appropriate COM port (com0)
 - SSH Port: The default SSH port is typically 22, but CIMC might use a specific port like 2400. Make sure this port is noted for later use
-- Save the Configuration: After configuring the Serial over LAN settings, save your changes in the CIMC interface
+4. Save the Configuration: After configuring the Serial over LAN settings, save your changes in the CIMC interface
 Access the Serial Console: To connect to the serial console via SSH, open a terminal on your local machine and use an SSH client to connect to the CIMC's IP address on the specified SSH port. For example: `ssh -p 2400 ocp@cimc_node_dns_address`
