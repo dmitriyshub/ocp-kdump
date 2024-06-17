@@ -43,20 +43,7 @@ One of the key steps in configuring KDUMP is to reserve a portion of the system'
 - [How to setup kdump to dump a vmcore on ssh location in Red Hat Openshift Container Platform nodes](https://access.redhat.com/solutions/6978127)
 - [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081)
 
-### Estimating the VMCORE Files Size:
-```bash
-# The makedumpfile --mem-usage command estimates how much space the crash dump file requires
-# By default the RHEL kernel uses 4 KB sized pages on AMD64 and Intel 64 CPU , and 64 KB sized pages on IBM POWER
-$ makedumpfile --mem-usage /proc/kcore
-```
-
-### Check Kernel Command-line Parameters:
-```bash
-rpm-ostree kargs
-cat /proc/cmdline
-```
-
-### KDUMP Manual Configuration:
+### KDUMP Manual Configuration (Not recommended)
 - Use rpm-ostree tool to add kernel parameter and enable kdump
 ```bash
 # add crashkernel parameter
@@ -73,14 +60,120 @@ $ chroot /host
 $ systemctl reboot
 
 ```
-- Initiate manual kernel crash
+
+### KDUMP Machineconfig Configuration:
+1. Choose the preffered target path (local/ssh) and create butane file
+```yaml
+variant: openshift
+version: 4.12.0
+metadata:
+  name: 99-worker-kdump
+  labels:
+    machineconfiguration.openshift.io/role: worker
+openshift:
+  kernel_arguments:
+    - crashkernel=1024M   
+storage:
+  files:
+  - path: /root/.ssh/id_kdump
+    mode: 0600                                                                 
+    overwrite: true
+    contents:
+      inline: |
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        SSH Private Key Content                                      
+        -----END OPENSSH PRIVATE KEY-----
+
+  - path: /root/.ssh/config
+    mode: 0644
+    overwrite: true
+    contents:
+      inline: |
+         Host <ip_or_dns_address>
+             StrictHostKeyChecking no
+
+  - path: /etc/kdump.conf
+    mode: 0644
+    overwrite: true
+    contents:
+      inline: | 
+        path /mnt/ocp_kdump/crash
+        ssh user@<ip_or_dns_address>
+        sshkey /root/.ssh/id_kdump
+        core_collector makedumpfile -l --message-level 1 -d 31
+        failure_action shell
+        
+
+  - path: /etc/sysconfig/kdump 
+    mode: 0644
+    overwrite: true
+    contents:
+      inline: |
+        KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb"
+        KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never nokaslr novmcoredd hest_disable" 
+        KEXEC_ARGS="-s"
+        KDUMP_IMG="vmlinuz"
+
+systemd:
+  units:
+    - name: kdump.service
+      enabled: true
+```
+
+2. Convert Butane file to MachineConfig YAML and Apply the MachineConfigs
+
 ```bash
+$ butane 99-worker-kdump.bu -o 99-worker-kdump.yaml
+$ oc apply -f 99-worker-kdump.yaml
+```
+
+3. Monitor the MachineConfigPool and wait for the update to complete after the new configurations are applied. The status of the machineconfigpool will change to "Updated" once all nodes have applied the new configuration
+```bash
+$ watch oc get nodes,mcp
+```
+
+### Initiate Manual Kernel Crash
+```bash
+# Check if kdump is active
+$ systemctl is-active kdump
 # OPTIONAL: Enable “softlockup_panic” so the kdump will write the vmcore file before the system restarts in case of a crash
 $ echo "1" >> /proc/sys/kernel/softlockup_panic
 # checking that the kdump.service has started and exited successfully and prints 1
 $ cat /sys/kernel/kexec_crash_loaded
 # trigger kernel dump
 $ echo c > /proc/sysrq-trigger
+```
+
+## Troubleshooting KDUMP
+
+### Estimating the VMCORE Files Size:
+```bash
+# The makedumpfile --mem-usage command estimates how much space the crash dump file requires
+# By default the RHEL kernel uses 4 KB sized pages on AMD64 and Intel 64 CPU , and 64 KB sized pages on IBM POWER
+$ makedumpfile --mem-usage /proc/kcore
+```
+
+### Check Kernel Command-line Parameters:
+```bash
+rpm-ostree kargs # Desired parameters
+cat /proc/cmdline # Actual Parameters
+```
+
+### Check KDUMP configuration files actual content
+```bash
+$ cat /etc/sysconfig/kdump 
+$ cat /etc/kdump.conf
+# For ssh target path
+$ cat /root/.ssh/config
+$ cat /root/.ssh/id_kdump
+```
+
+### Check KDUMP logs
+```bash
+$ cat /var/log/kdump.log
+$ journalctl --unit kdump
+$ dmesg | grep dracut
+$ dmesg | grep crash
 ```
 
 ### Configure Serial Console to Troubleshoot KDUMP Issues
@@ -133,6 +226,9 @@ $ oc apply -f 99-worker-getty-ttyS0.yaml
 ```
 
 3. Monitor the MachineConfigPool and wait for the update to complete after the new configurations are applied. The status of the machineconfigpool will change to "Updated" once all nodes have applied the new configuration
+```bash
+$ watch oc get nodes,mcp
+```
 
 ### Access Serial Console via CIMC's Serial over LAN
 1. Log in to the CIMC Interface: Open a web browser and navigate to the CIMC interface using the IP address or hostname of the Cisco bmc server. Log in with ocp user credentials
