@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kdump-mount
+  labels:
+    app: kdump-mount
+spec:
+  selector:
+    matchLabels:
+      app: kdump-mount
+  template:
+    metadata:
+      labels:
+        app: kdump-mount
+    spec:
+      containers:
+      - name: kdump-mount
+        image: busybox
+        command: ["/bin/sh", "-c", "sleep infinity"]
+        volumeMounts:
+        - name: kdump-storage
+          mountPath: /var/crash
+      volumes:
+      - name: kdump-storage
+        persistentVolumeClaim:
+          claimName: kdump-pvc
+      restartPolicy: Always

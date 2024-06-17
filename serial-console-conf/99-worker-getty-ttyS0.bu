@@ -1,0 +1,38 @@
+variant: openshift
+version: 4.12.0
+metadata:
+  name: 99-worker-getty-ttyS0
+  labels:
+    machineconfiguration.openshift.io/role: worker
+openshift:
+  kernel_arguments:
+    - console=ttyS0,115200n8
+    - console=tty0
+systemd:
+  units:  
+    - name: serial-getty@ttyS0.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Serial Getty on ttyS0
+        Documentation=man:agetty(8) man:systemd-getty-generator(8)
+        After=systemd-user-sessions.service plymouth-quit-wait.service
+        After=rc-local.service
+        After=systemd-journald.socket
+        Wants=systemd-user-sessions.service plymouth-quit-wait.service
+
+        [Service]
+        ExecStart=-/sbin/agetty --keep-baud 115200,9600,38400,19200,9600 ttyS0 $TERM
+        Type=idle
+        Restart=always
+        RestartSec=0
+        UtmpIdentifier=ttyS0
+        TTYPath=/dev/ttyS0
+        TTYReset=yes
+        TTYVHangup=yes
+        KillMode=process
+        IgnoreSIGPIPE=no
+        SendSIGHUP=yes
+
+        [Install]
+        WantedBy=multi-user.target
