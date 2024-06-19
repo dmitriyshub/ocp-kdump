@@ -38,5 +38,5 @@ spec:
           enabled: true
           name: serial-getty@ttyS0.service
   kernelArguments:
-    - console=ttyS0,115200n8
     - console=tty0
+    - console=ttyS0,115200n8

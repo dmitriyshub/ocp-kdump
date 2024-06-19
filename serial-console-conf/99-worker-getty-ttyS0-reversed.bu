@@ -6,8 +6,9 @@ metadata:
     machineconfiguration.openshift.io/role: worker
 openshift:
   kernel_arguments:
-    - console=ttyS0,115200n8
     - console=tty0
+    - console=ttyS0,115200n8
+
 systemd:
   units:  
     - name: serial-getty@ttyS0.service

@@ -14,9 +14,9 @@ One of the key steps in configuring KDUMP is to reserve a portion of the system'
 
 ### Summary Steps:
 
-1. Test the kdump on my local rhel vm and ensure that everything is working correctly and the kdump generates the vmcore files in the target path successfully
+1. Test the kdump on local rhel vm and ensure that everything is working correctly and the kdump generates the vmcore files in the target path successfully (Optionl)
 
-2. Configure the machineconfig yaml file with all the necessary configuration of kdump systemd unit, kdump configuration files, and memory reservation crashkernel=value parameter
+2. Configure the machineconfig yaml file with all the necessary configuration of kdump systemd unit, kdump configuration files, and memory reservation `crashkernel=value` parameter
 
 3. Create a kdump machineconfig object in the cluster and wait until the machineconfig operator picks up the changes and starts to update, initialize, and reboot the nodes
 
@@ -28,11 +28,11 @@ One of the key steps in configuring KDUMP is to reserve a portion of the system'
 
 7. Start the debug pod again and check if the vmcore files exist in the target path
 
-### Docs:
+### Documentation:
 - [Configuring kdump on the command line](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/configuring-kdump-on-the-command-line_managing-monitoring-and-updating-the-kernel)
 - [Supported kdump configurations and targets](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/supported-kdump-configurations-and-targets_managing-monitoring-and-updating-the-kernel)
 
-### Manuals:
+### Manual Pages:
 - [makedumpfile - make a small dumpfile of kdump](https://www.linux.org/docs/man5/makedumpfile.html)
 - [kdump.conf - configuration file for kdump kernel](https://linux.die.net/man/5/kdump.conf)
 - [dracut.cmdline - dracut kernel command line options](https://www.unix.com/man-page/linux/7/dracut.cmdline/)
@@ -43,7 +43,7 @@ One of the key steps in configuring KDUMP is to reserve a portion of the system'
 - [How to setup kdump to dump a vmcore on ssh location in Red Hat Openshift Container Platform nodes](https://access.redhat.com/solutions/6978127)
 - [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081)
 
-### KDUMP Manual Configuration (Not recommended)
+### KDUMP Manual Configuration (Not Recommended)
 - Use rpm-ostree tool to add kernel parameter and enable kdump
 ```bash
 # add crashkernel parameter
@@ -58,7 +58,6 @@ $ oc adm drain <node-name> --ignore-daemonsets --delete-emptydir-data --force
 $ oc debug node/<node-name>
 $ chroot /host
 $ systemctl reboot
-
 ```
 
 ### KDUMP Machineconfig Configuration:
@@ -100,9 +99,8 @@ storage:
         path /mnt/ocp_kdump/crash
         ssh user@<ip_or_dns_address>
         sshkey /root/.ssh/id_kdump
-        core_collector makedumpfile -l --message-level 1 -d 31
+        core_collector makedumpfile -F -l --message-level 1 -d 31
         failure_action shell
-        
 
   - path: /etc/sysconfig/kdump 
     mode: 0644
@@ -159,7 +157,7 @@ rpm-ostree kargs # Desired parameters
 cat /proc/cmdline # Actual Parameters
 ```
 
-### Check KDUMP configuration files actual content
+### Check KDUMP Configuration Files Content
 ```bash
 $ cat /etc/sysconfig/kdump 
 $ cat /etc/kdump.conf
@@ -177,6 +175,7 @@ $ dmesg | grep crash
 ```
 
 ### Configure Serial Console to Troubleshoot KDUMP Issues
+- [How does one set up a serial terminal and/or console in Red Hat Enterprise Linux?](https://access.redhat.com/articles/3166931)
 1. Create a Butane file for Kernel Arguments and systemd service
 ```yaml
 variant: openshift
@@ -230,7 +229,7 @@ $ oc apply -f 99-worker-getty-ttyS0.yaml
 $ watch oc get nodes,mcp
 ```
 
-### Access Serial Console via CIMC's Serial over LAN
+### Access Serial Console via CIMC's Serial Over LAN
 1. Log in to the CIMC Interface: Open a web browser and navigate to the CIMC interface using the IP address or hostname of the Cisco bmc server. Log in with ocp user credentials
 2. Navigate to Remote Management: In the CIMC web interface, locate the section for remote management. This is often found under the Compute tab
 3. Configure Serial over LAN:

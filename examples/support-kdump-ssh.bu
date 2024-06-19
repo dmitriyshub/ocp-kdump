@@ -34,7 +34,7 @@ storage:
         path /mnt/ocp_kdump/crash
         ssh user@<ip_or_dns_address>
         sshkey /root/.ssh/id_kdump
-        core_collector makedumpfile -l --message-level 1 -d 31
+        core_collector makedumpfile -F -l --message-level 1 -d 31
         failure_action shell
         
 

@@ -9,13 +9,59 @@ openshift:
     - crashkernel=1024M   
 storage:
   files:
-  - path: /root/.ssh/id_kdump
+  - path: /root/.ssh/vm-key
     mode: 0600                                                                 
     overwrite: true
     contents:
       inline: |
         -----BEGIN OPENSSH PRIVATE KEY-----
-
+        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
+        Q3VssJtxMmybAAAAAAEC
         -----END OPENSSH PRIVATE KEY-----
 
   - path: /root/.ssh/config
@@ -23,7 +69,7 @@ storage:
     overwrite: true
     contents:
       inline: |
-         Host 192.168.12.127
+         Host 192.168.12.113
              StrictHostKeyChecking no
 
   - path: /etc/kdump.conf
@@ -31,8 +77,10 @@ storage:
     overwrite: true
     contents:
       inline: | 
-        core_collector makedumpfile -l --message-level 1 -d 31
-        path /sysroot/ostree/deploy/rhcos/var/crash
+        path /tmp/ocp/crash
+        ssh cloud-user@192.168.12.113
+        sshkey /root/.ssh/vm-key
+        core_collector makedumpfile -F -l --message-level 1 -d 31
         failure_action shell
 
   - path: /etc/sysconfig/kdump 
