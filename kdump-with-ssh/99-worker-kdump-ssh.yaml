@@ -13,7 +13,7 @@ spec:
       files:
         - contents:
             compression: gzip
-            source: data:;base64,ENCODED_PRIVATE_KEY
+            source: data:;base64,ENCODED_SSH_PRIVATE_KEY_CONTENT
           mode: 384
           overwrite: true
           path: /root/.ssh/vm-key
@@ -24,14 +24,14 @@ spec:
           overwrite: true
           path: /root/.ssh/config
         - contents:
-            compression: ""
-            source: data:,path%20%2Ftmp%2Focp%2Fcrash%0Assh%20cloud-user%40192.168.12.113%0Asshkey%20%2Froot%2F.ssh%2Fvm-key%0Acore_collector%20makedumpfile%20-F%20-l%20--message-level%201%20-d%2031%0Afailure_action%20shell%0A
+            compression: gzip
+            source: data:;base64,H4sIAAAAAAAC/yzLQWrEMAwF0L1PIejaMZ6B0u666jWCsH/GIXIVJHtobl8Ks368k0ejNPqZtJypGHsL7o2K6KxxOuwrf96W/P6x5NuS8/1fD1yUTHWkxb2lZ48HrlDUsBYVQRlq1PlAnf3cdgHFb4qFYuxw5wei4AmhTLHSPYeKjacM8gaRgN9hvHatU+DU8WDjva7OHt423mUaVi5j159X+AsAAP//xSsYRMQAAAA=
           mode: 420
           overwrite: true
           path: /etc/kdump.conf
         - contents:
             compression: gzip
-            source: data:;base64,H4sIAAAAAAAC/2yQO2/bMBCAd/+Kg3bbkhxJ9sDBjYXASGUb7gPdCD5OEhGKZPhQm/z6Ii7cKdN903133/PhR3ehX87n74fjlWRrbm1c2xA94tqPwoZlzcq62vFc8LrabTYPpdyyXdGIZlM2D7woK9b0vJesyllTlwyLUm53mBeVZGJTb4ts8c/xeO66/enw9Xhq6bXtzj9bko1pQMcGDPCf3iHoxKlEngZ4TQojaDtQnnqq0UD4rWzU/LOl+8ulPR1Ipvyrs1qD8VS4FEgBHgNGKnFWAgOIwdvkqFSBcY1kwsn6N5gEEtv3YNLEbpAkzisxKi09muXE/pASHDNKkDoHb23sNRsCMbZnSgMTTlFj6YTTaKPTaYDomQmOeTSR3t8jBmf0YOwLC/pjzpOwHqWEEUO83wS38qsPCRH+zUV68wXwcqXTSyB5Bovn9lf7SPfXp28kW4Z7kGP3RLJ50sqk92zxNwAA//9zBxjM3gEAAA==
+            source: data:;base64,H4sIAAAAAAAC/2SPvU4rMRBG+zzFyH2uLhR0LqJkFUVhkygIRGd57Vmvxdjj+GeBPD0CKTRU36k+nbPfPPcntT72/eqwedwdOnXu+uNLJ8XUHCbtsMAvXaFQG5TFoTm4NI8ViJ0a2qgII5R3z5UGsfh7ujqdusNGCp8viYkgZmVSK/IOMhasyuLsDRYwLnNLyvqiB0IZMHD+hGBQ8jhCbEH/QLM4/zOTJ5sxLoP+kPeQdPRGPvyHzFxH0q7IyKP2BNokryKrgGHimqg5qFnHknTGWNUtT0acMUPkN13oe+dgOKO1MGGpNycBi3332q3V6rx9kmJZbrm7fivFHMjHdhWLrwAAAP//3Px7uFgBAAA=
           mode: 420
           overwrite: true
           path: /etc/sysconfig/kdump

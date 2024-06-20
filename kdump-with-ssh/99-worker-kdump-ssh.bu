@@ -15,7 +15,7 @@ storage:
     contents:
       inline: |
         -----BEGIN OPENSSH PRIVATE KEY-----
-
+        -----SSH_PRIVATE_KEY_CONTENT-----
         -----END OPENSSH PRIVATE KEY-----
 
   - path: /root/.ssh/config
@@ -34,19 +34,21 @@ storage:
         path /tmp/ocp/crash
         ssh cloud-user@192.168.12.113
         sshkey /root/.ssh/vm-key
-        core_collector makedumpfile -F -l --message-level 1 -d 31
-        failure_action shell
+        core_collector makedumpfile -F -c --message-level 1 -d 31
+        extra_modules megaraid_sas
+        default shell
+        #failure_action shell
 
   - path: /etc/sysconfig/kdump 
     mode: 0644
     overwrite: true
     contents:
       inline: |
-        KDUMP_BOOTDIR="/boot/ostree/rhcos-6a2659b0cb6593342d8a917c73274b125a7fbfda50a762ae12d89e015dac3681"
         KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb"
-        KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=60 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never nokaslr novmcoredd hest_disable rhcos.root=crypt_rootfs rd.luks=0" 
+        KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=30 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never nokaslr novmcoredd hest_disable" 
         KEXEC_ARGS="-s"
         KDUMP_IMG="vmlinuz"
+
 
 systemd:
   units:
