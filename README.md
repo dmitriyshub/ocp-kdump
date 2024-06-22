@@ -86,17 +86,17 @@ To ensure sufficient storage for vmcore dumps, it's **recommended** that storage
 
 ### KDUMP Manual Configuration (Not Recommended)
 
-- Use `rpm-ostree` to Add Kernel Parameter and Enable `kdump`
+- Use `rpm-ostree` to Add Kernel Parameter and Enable `kdump` 
 
 ```bash
-# check and modify configuration files
+# Check and modify configuration files
 vi /etc/kdump.conf
 vi /etc/sysconfig/kdump
-# add crashkernel parameter
+# Add crashkernel parameter
 rpm-ostree kargs --append='crashkernel=256M'
-# enable kdump and reboot machine
+# Enable kdump and reboot machine
 systemctl enable --now kdump
-# OPTIONAL
+# Optional
 kdumpctl rebuild
 kdumpctl restart
 ```
@@ -326,14 +326,14 @@ systemd:
 2. Convert Butane file to MachineConfig YAML and Apply the MachineConfigs
 
 ```bash
-$ butane 99-worker-getty-ttyS0.bu -o 99-worker-getty-ttyS0.yaml
-$ oc apply -f 99-worker-getty-ttyS0.yaml
+butane 99-worker-getty-ttyS0.bu -o 99-worker-getty-ttyS0.yaml
+oc apply -f 99-worker-getty-ttyS0.yaml
 ```
 
 3. Monitor the `MachineConfigPool` and wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
 
 ```bash
-$ watch oc get nodes,mcp
+watch oc get nodes,mcp
 ```
 
 ---
