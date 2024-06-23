@@ -265,7 +265,7 @@ KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swio
 KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=60 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never novmcoredd hest_disable module_blacklist=igb,ixgbe"
 ```
 
-- Use `kdumpctl` After Every Change
+- To Apply New `kdump` Configuration Execute One of `kdumpctl` Examples After Every Change
 ```bash
 kdumpctl reload # reload the crash kernel image and initramfs without triggering a rebuild.
 kdumpctl rebuild # rebuild the crash kernel initramfs.
