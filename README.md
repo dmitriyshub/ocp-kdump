@@ -4,6 +4,10 @@
 
 `Kdump` is a kernel feature that allows crash dumps to be created during a kernel crash. It produces a `vmcore`(a system-wide coredump, which is the recorded state of the working memory in the host at the time of the crash) that can be analyzed for the root cause analysis of the crash.
 
+`kdump` uses a mechanism called `kexec` to boot into a second kernel whenever the system crashes. This second kernel, often called the crash kernel, boots with very little memory and captures the dump image.
+
+If `kdump` is enabled on your system, the standard boot kernel will reserve a small section of system RAM and load the `kdump` kernel into the reserved space. When a kernel panic or other fatal error occurs, `kexec` is used to boot into the `kdump` kernel without going through BIOS. The system reboots to the `kdump` kernel that is confined to the memory space reserved by the standard boot kernel, and this kernel writes a copy or image of the system memory to the storage mechanism defined in the configuration files.
+
 One of the key steps in configuring `kdump` is to reserve a portion of the system's memory for the `kdump` kernel. This is done using the `crashkernel` parameter, which specifically reserves memory for the `kdump` kernel during boot.
 
 The `kdump` service uses a `core_collector` program to capture the crash dump image. In rhel, the `makedumpfile` utility is the default `core_collector`. It helps shrink the dump file by:
@@ -274,6 +278,18 @@ dmesg | grep crash
 ls -l /sys/fs/pstore
 ```
 
+- If The `kdump` Configuration Files Manually Modified and the `MachineConfigPool` Status Changed to `Degraded`, Its possible to Decode the Rendered `MachineConfig` File Content - [Link](https://access.redhat.com/solutions/5315421)
+```bash
+# Check node desired rendered machineconfig name
+oc get node node_name -o yaml | grep desiredConfig
+    machineconfiguration.openshift.io/desiredConfig: [rendered-worker_name]
+# Check encoding type
+oc get mc [rendered-worker_name] -o yaml | grep -B5 "path: [escaped_path]" | grep source | tail -n 1 | cut -d"," -f1
+# base64 encoding
+oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep source | tail -n 1 | cut -d"," -f2 | base64 -d
+# url encoding
+function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; } ;  urldecode "$(oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep source | tail -n 1 | cut -d"," -f2)"
+```
 ---
 
 ### Configure Serial Console to Troubleshoot KDUMP Issues
