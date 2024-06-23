@@ -291,7 +291,7 @@ dmesg | grep crash
 ls -l /sys/fs/pstore
 ```
 
-- If The `kdump` Configuration Files Manually Modified and the `MachineConfigPool` Status Changed to `Degraded`, Its possible to Decode the Rendered `MachineConfig` File Content - [Link](https://access.redhat.com/solutions/5315421)
+- If The `MachineConfigPool` Status Changed to `Degraded` Due to Configuration File Content Mismatch, Its possible to Decode the Rendered `MachineConfig` File Content [on-disk validation fails on file content mismatch during MCO upgrade in OpenShift 4](https://access.redhat.com/solutions/5315421)
 ```bash
 # Check node desired rendered machineconfig name
 oc get node node_name -o yaml | grep desiredConfig
