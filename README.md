@@ -67,10 +67,18 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 ---
 
 ### Manual Pages
-**NOTE:** Always refer to your **CoreOS** tools version manual page
-- [makedumpfile - make a small dumpfile of kdump](https://www.linux.org/docs/man5/makedumpfile.html)
 
-- [kdump.conf - configuration file for kdump kernel](https://linux.die.net/man/5/kdump.conf)
+- **NOTE:** Always refer to your **CoreOS** tools version manual page
+
+- [kexec(8) - Linux man page](https://linux.die.net/man/8/kexec)
+
+- [makedumpfile(8) - make a small dumpfile of kdump](https://www.linux.org/docs/man5/makedumpfile.html)
+
+- [kdump.conf(5) - configuration file for kdump kernel](https://linux.die.net/man/5/kdump.conf)
+
+- [kdump - Configuration of kdump](https://www.unix.com/man-page/suse/5/kdump/)
+
+- [kdumpctl - control interface for kdump](https://www.linux.org/docs/man8/kdumpctl.html)
 
 - [dracut.cmdline - dracut kernel command line options](https://www.unix.com/man-page/linux/7/dracut.cmdline/)
 
