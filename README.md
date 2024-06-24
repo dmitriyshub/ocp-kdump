@@ -60,7 +60,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ### Documentation
 
-- [The importance of configuring kernel dumps](https://www.redhat.com/en/blog/importance-configuring-kernel-dumps-rhel)
+- [The importance of configuring kernel dumps](https://www.redhat.com/en/blog/importance-configuring-kernel-dumps-rhel) <- Recommended
 
 - [Configuring kdump on the command line (RHEL8 CoreOS 4.12 and lower)](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/configuring-kdump-on-the-command-line_managing-monitoring-and-updating-the-kernel)
 
@@ -92,13 +92,13 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ### Issues and Solutions
 
+- [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081) <- Recommended
+
 - [Setting up kdump in Red Hat Openshift Container Platform and Red Hat CoreOS](https://access.redhat.com/solutions/5907731)
 
 - [Missing Logs in /var/crash Post Kdump Setup in RHOCP4](https://access.redhat.com/solutions/7058348)
 
 - [How to setup kdump to dump a vmcore on ssh location in Red Hat Openshift Container Platform nodes](https://access.redhat.com/solutions/6978127)
-
-- [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081)
 
 - [kdump fails to generate vmcore with SysRq on servers installed with LEGACY BIOS and vga controller...](https://access.redhat.com/solutions/5770681)
 
