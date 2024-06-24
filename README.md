@@ -20,6 +20,12 @@ To ensure sufficient storage for vmcore dumps, it's **recommended** that storage
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash/` directory of the local file system.
 
+
+### In Clustered Environments
+Cluster environments potentially invite their own unique obstacles to vmcore collection. Some clusterware provides functionality to fence nodes via the SysRq or an NMI allows for vmcore collection upon fencing a node.
+
+In addition to ensuring that the cluster and kdump configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test.
+
 ---
 
 ### Kdump Procedure
@@ -98,7 +104,7 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 
 ---
 
-### KDUMP Manual Configuration (Not Recommended)
+### Manual Configuration (Not Recommended)
 
 - Use `rpm-ostree` to Add Kernel Parameter and Enable `kdump` 
 
@@ -113,7 +119,7 @@ systemctl enable --now kdump
 # Optional
 ```
 
-- Execute `cordon`, `drain` and Reboot the Node
+- Execute `cordon` and `drain` Before Reboot the Node
 
 ```bash
 oc adm cordon <node-name>
@@ -125,7 +131,7 @@ systemctl reboot
 
 ---
 
-### KDUMP Machineconfig Configuration
+### Machineconfig Configuration
 
 1. Choose the Preffered Target Path (`local`/`ssh`) and Create Butane File
 
@@ -201,7 +207,7 @@ watch oc get nodes,mcp
 
 ---
 
-### Initiate Manual Kernel Crash
+### Initiate Manual Kernel Crash Dump
 
 ```bash
 # Check if kdump is active
@@ -216,7 +222,7 @@ echo c > /proc/sysrq-trigger
 
 ---
 
-## Troubleshooting KDUMP
+## Troubleshooting
 
 - Estimate the `crashkernel` Parameter
 ```bash
@@ -275,9 +281,10 @@ KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory 
 
 - To Apply New `kdump` Configuration Execute One of `kdumpctl` Examples After Every Change
 ```bash
-kdumpctl reload # reload the crash kernel image and initramfs without triggering a rebuild.
-kdumpctl rebuild # rebuild the crash kernel initramfs.
+kdumpctl reload # Reload the crash kernel image and initramfs without triggering a rebuild.
+kdumpctl rebuild # Rebuild the crash kernel initramfs.
 kdumpctl restart # Is equal to start; stop
+kdumpctl propagate # Helps to setup key authentication for ssh storage since it's impossible to use password authentication during kdump.
 ```
 
 - Check `kdump` Logs
