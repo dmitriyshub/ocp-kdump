@@ -13,7 +13,7 @@ spec:
       files:
         - contents:
             compression: gzip
-            source: data:;base64,ENCODED_SSH_PRIVATE_KEY_CONTENT
+            source: data:;base64,H4sIAAAAAAAC/9IFASdXd08/Bf8AV7/gYA+FgCDPMMcQVwVv10iwLBeYDA72iIfKxHu7RsY7+/uFuPqFIKlw9XPBbQYgAAD//5r1mupoAAAA
           mode: 384
           overwrite: true
           path: /root/.ssh/vm-key
@@ -25,13 +25,13 @@ spec:
           path: /root/.ssh/config
         - contents:
             compression: gzip
-            source: data:;base64,H4sIAAAAAAAC/yzLQWrEMAwF0L1PIejaMZ6B0u666jWCsH/GIXIVJHtobl8Ks368k0ejNPqZtJypGHsL7o2K6KxxOuwrf96W/P6x5NuS8/1fD1yUTHWkxb2lZ48HrlDUsBYVQRlq1PlAnf3cdgHFb4qFYuxw5wei4AmhTLHSPYeKjacM8gaRgN9hvHatU+DU8WDjva7OHt423mUaVi5j159X+AsAAP//xSsYRMQAAAA=
+            source: data:;base64,H4sIAAAAAAAC/yzJQWrEMAwF0L1PIejaMZ6B0u666jWCsH/GIXIVJHtobl8Ks33v5NEojX4mLWcqxt6Ce6MiOmucDvvKn7clv38s+bbkfP/fAxclUx1pcW/p2eOBKxQ1rEVFUIYadT5QZz+3XUDxm2KhGDvc+YEoeEIoU6x0zwG/w3jtWqfAqePBxntdnT1UbDxlkDeIhLeNd5mGlcvY9eelfwEAAP//GZfnAsQAAAA=
           mode: 420
           overwrite: true
           path: /etc/kdump.conf
         - contents:
             compression: gzip
-            source: data:;base64,H4sIAAAAAAAC/2SPvU4rMRBG+zzFyH2uLhR0LqJkFUVhkygIRGd57Vmvxdjj+GeBPD0CKTRU36k+nbPfPPcntT72/eqwedwdOnXu+uNLJ8XUHCbtsMAvXaFQG5TFoTm4NI8ViJ0a2qgII5R3z5UGsfh7ujqdusNGCp8viYkgZmVSK/IOMhasyuLsDRYwLnNLyvqiB0IZMHD+hGBQ8jhCbEH/QLM4/zOTJ5sxLoP+kPeQdPRGPvyHzFxH0q7IyKP2BNokryKrgGHimqg5qFnHknTGWNUtT0acMUPkN13oe+dgOKO1MGGpNycBi3332q3V6rx9kmJZbrm7fivFHMjHdhWLrwAAAP//3Px7uFgBAAA=
+            source: data:;base64,H4sIAAAAAAAC/2SPvU4rMRBG+zzFyH2uLlC7iJJVFIVNoiAQneW1Z70WY4/jnwXy9Aik0FB9p/p0zn7z3J/U+tj3q8PmcXfo1Lnrjy+dFFNzmLTDAr90hUJtUBaH5uDSPFYgdmpooyKMUN49VxrE4u/p6nTqDhspfL4kJoKYlUmtyDvIWLAqi7M3WMC4zC0p64seCGXAwPkTgkHJ4wixBf0DzeL8z0yebMa4DPpD3kPS0Rv58B8ycx1JuyIjj9oTaJO8iqwCholrouagZh1L0hljVbc8GXHGDJHfdKHvnYPhjNbChKXenAQs9t1rt1ar8/ZJimW55e76rRRzIB/bVSy+AgAA//9OdT56WAEAAA==
           mode: 420
           overwrite: true
           path: /etc/sysconfig/kdump

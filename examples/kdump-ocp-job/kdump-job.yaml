@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kdump-upload
+  namespace: ocp-kdump
+spec:
+  schedule: "0 * * * *"  # Run every hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: kdump-job-sa
+          nodeSelector:
+            node-role.kubernetes.io/worker: ""  # Run only on worker nodes
+          containers:
+          - name: kdump-upload-container
+            image: your-docker-image  # This image should contain the script and necessary tools
+            volumeMounts:
+            - name: kdump-mount
+              mountPath: /var/crash  # Mount the kdump directory
+            env:
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: kdump-bucket-claim
+                  key: AWS_ACCESS_KEY_ID
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: kdump-bucket-claim
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: S3_BUCKET_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: kdump-bucket-claim
+                  key: BUCKET_HOST
+            - name: S3_BUCKET_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: kdump-bucket-claim
+                  key: BUCKET_NAME
+            - name: S3_BUCKET_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: kdump-bucket-claim
+                  key: BUCKET_PORT
+            - name: S3_BUCKET_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: kdump-bucket-claim
+                  key: BUCKET_REGION
+          restartPolicy: OnFailure
+          volumes:
+          - name: kdump-mount
+            hostPath:
+              path: /var/crash  # Host path to the kdump directory
