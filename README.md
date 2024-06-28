@@ -58,6 +58,21 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ---
 
+### Table of Content
+
+
+- [Manual Configuration](/docs/MANUAL_README.md)
+
+- [Machineconfig Configuration](/docs/MC_README.md)
+
+- [KDUMP Troubleshooting](/docs/TROUBLESHOOT_README.md)
+
+- [Configure Serial Console to Troubleshoot KDUMP Issues](/examples/serial-console-conf/README.md)
+
+- [KDUMP examples](/examples/README.md)
+
+---
+
 ### Documentation and Articles
 
 - [The importance of configuring kernel dumps](https://www.redhat.com/en/blog/importance-configuring-kernel-dumps-rhel) <- Recommended
@@ -105,16 +120,3 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 - [kdump fails to generate vmcore with SysRq on servers installed with LEGACY BIOS and vga controller...](https://access.redhat.com/solutions/5770681)
 
 ---
-
-### Table of Content
-
-
-- [Manual Configuration](/docs/MANUAL_README.md)
-
-- [Machineconfig Configuration](/docs/MC_README.md)
-
-- [KDUMP Troubleshooting](/docs/TROUBLESHOOT_README.md)
-
-- [Configure Serial Console to Troubleshoot KDUMP Issues](/examples/serial-console-conf/README.md)
-
-- [KDUMP examples](/examples/README.md)
