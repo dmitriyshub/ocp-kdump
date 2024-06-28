@@ -78,3 +78,9 @@ watch oc get nodes,mcp
 4. Save the Configuration
 
 5. To connect to the serial console via SSH, open a terminal on your local machine and use an SSH client to connect to the CIMC's IP address on the specified SSH port. For example: `ssh -p 2400 ocp@cimc_node_dns_address`
+
+---
+
+[Return to main](../README.md)
+
+---

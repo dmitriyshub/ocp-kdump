@@ -10,3 +10,7 @@ dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vm
 ```
 
 ---
+
+[Return to main](../README.md)
+
+---

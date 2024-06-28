@@ -88,3 +88,7 @@ function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; } ;  urldecode "$(o
 ```
 
 ---
+
+[Return to main](../README.md)
+
+---
