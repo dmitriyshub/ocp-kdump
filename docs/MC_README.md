@@ -1,8 +1,9 @@
-### KDUMP Machineconfig Configuration
+# KDUMP Machineconfig Configuration
 
 1. Choose the Preffered Target Path (`local`/`ssh`) and Create Butane File
 
-- Add `makedumpfile -F` Option Only for SSH target 
+- Add `makedumpfile -F` Option Only for SSH target
+
 ```yaml
 variant: openshift
 version: 4.12.0
@@ -69,11 +70,12 @@ oc apply -f 99-worker-kdump.yaml
 ```
 
 3. Monitor the `MachineConfigPool` and wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
+
 ```bash
 watch oc get nodes,mcp
 ```
 
-### Initiate Manual Kernel Crash Dump
+## Initiate Manual Kernel Crash Dump
 
 ```bash
 # Check if kdump is active

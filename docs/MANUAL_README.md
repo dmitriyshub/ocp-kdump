@@ -1,4 +1,4 @@
-### KDUMP Manual Configuration (Not Recommended)
+# KDUMP Manual Configuration (Not Recommended)
 
 - **NOTE:** Always Backup the configuration files
 
@@ -29,7 +29,7 @@ chroot /host
 systemctl reboot
 ```
 
-### Initiate Manual Kernel Crash Dump
+## Initiate Manual Kernel Crash Dump
 
 ```bash
 # Check if kdump is active

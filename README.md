@@ -1,4 +1,4 @@
-## KDUMP in OpenShift CoreOS **baremetal** Nodes
+# KDUMP in OpenShift CoreOS **baremetal** Nodes
 
 ---
 
@@ -20,7 +20,7 @@ To ensure sufficient storage for vmcore dumps, it's **recommended** that storage
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash/` directory of the local file system.
 
-### In Clustered Environments
+## In Clustered Environments
 
 Cluster environments potentially invite their own unique obstacles to vmcore collection. Some clusterware provides functionality to fence nodes via the SysRq or an NMI allows for vmcore collection upon fencing a node.
 
@@ -28,7 +28,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ---
 
-### Kdump Procedure
+## Kdump Procedure
 
 1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
 
@@ -40,7 +40,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ---
 
-### Summary Steps
+## Summary Steps
 
 1. Test the `kdump` in rhel host and ensure that everything is working correctly and the `kdump` generates the vmcore files in the target path successfully (Optionl)
 
@@ -59,7 +59,6 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 ---
 
 ### Table of Content
-
 
 - [Manual Configuration](/docs/MANUAL_README.md)
 
@@ -108,6 +107,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 - [dracut.cmdline(7) - dracut kernel command line options](https://www.unix.com/man-page/linux/7/dracut.cmdline/)
 
 - [dracut-module-setup.sh - Github Repository](https://github.com/jesa7955/kexec-tools-fedora/blob/master/dracut-module-setup.sh)
+
 ---
 
 ### Issues and Solutions
@@ -123,5 +123,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 - [kdump fails to generate vmcore with SysRq on servers installed with LEGACY BIOS and vga controller...](https://access.redhat.com/solutions/5770681)
 
 - [kdump failure when network requires multiple nics to reach dump target](https://access.redhat.com/solutions/3744271)
+
+- [What is early kdump support and how do I configure it?](https://access.redhat.com/solutions/3700611)
 
 ---

@@ -1,6 +1,7 @@
-### KDUMP Troubleshooting
+# KDUMP Troubleshooting
 
 - Estimate the `crashkernel` Parameter
+
 ```bash
 kdumpctl get-default-crashkernel
 kdumpctl estimate
@@ -44,8 +45,8 @@ extra_modules megaraid_sas sd_mod
 - Add default or failure Behavior `/etc/kdump.conf` (depends on `kdump-utils` version)
 
 ```bash
-default shell # Newer Versions
-failure_action shell # Older Versions
+failure_action shell # Newer Versions (Action to perform in case dumping to the intended target fails)
+default shell #  Older Versions (Same  as  the  "failure_action",  but this directive is obsolete and will be removed in the future)
 ```
 
 - Modifiy the kernel command line `/etc/sysconfig/kdump`
@@ -56,6 +57,7 @@ KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory 
 ```
 
 - To Apply New `kdump` Configuration Execute One of `kdumpctl` Examples After Every Change
+
 ```bash
 kdumpctl reload # Reload the crash kernel image and initramfs without triggering a rebuild.
 kdumpctl rebuild # Rebuild the crash kernel initramfs.
@@ -74,7 +76,9 @@ dmesg | grep crash
 ls -l /sys/fs/pstore
 ```
 
-- If The `MachineConfigPool` Status Changed to `Degraded` Due to Configuration File Content Mismatch, Its possible to Decode the Rendered `MachineConfig` File Content [on-disk validation fails on file content mismatch during MCO upgrade in OpenShift 4](https://access.redhat.com/solutions/5315421)
+- If The `MachineConfigPool` Status Changed to `Degraded` Due to Configuration File Content Mismatch, Its possible to Decode the Rendered `MachineConfig` File Content
+[on-disk validation fails on file content mismatch during MCO upgrade in OpenShift 4](https://access.redhat.com/solutions/5315421)
+
 ```bash
 # Check node desired rendered machineconfig name
 oc get node node_name -o yaml | grep desiredConfig
@@ -85,6 +89,17 @@ oc get mc [rendered-worker_name] -o yaml | grep -B5 "path: [escaped_path]" | gre
 oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep source | tail -n 1 | cut -d"," -f2 | base64 -d
 # url encoding
 function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; } ;  urldecode "$(oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep source | tail -n 1 | cut -d"," -f2)"
+```
+
+- Extract the kdump `initramfs` Image for Troubleshooting `squashfs-root` Filesystem
+[How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/2037313#B)
+
+```bash
+ls -la /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img
+mkdir /var/initrd; cd /var/initrd
+/usr/lib/dracut/skipcpio /var/lib/kdump/initramfs-$(uname -r)kdump.img        | cpio -idmv
+unsquashfs squash-root.img
+ls -la squashfs-root/
 ```
 
 ---
