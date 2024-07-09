@@ -1,4 +1,4 @@
-# KDUMP in OpenShift CoreOS **baremetal** Nodes
+# KDUMP in OpenShift CoreOS Baremetal Nodes
 
 ---
 
@@ -112,7 +112,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ### Issues and Solutions
 
-- [Common kdump Configuration Mistakes **(Recommended)**](https://access.redhat.com/articles/5332081)
+- [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081) **(Recommended)**
 
 - [Setting up kdump in Red Hat Openshift Container Platform and Red Hat CoreOS](https://access.redhat.com/solutions/5907731)
 
