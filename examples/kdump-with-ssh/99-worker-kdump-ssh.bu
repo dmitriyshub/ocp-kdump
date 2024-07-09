@@ -6,7 +6,7 @@ metadata:
     machineconfiguration.openshift.io/role: worker
 openshift:
   kernel_arguments:
-    - crashkernel=1024M   
+    - crashkernel=512M   
 storage:
   files:
   - path: /root/.ssh/vm-key

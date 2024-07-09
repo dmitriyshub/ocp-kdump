@@ -6,7 +6,7 @@ metadata:
     machineconfiguration.openshift.io/role: worker
 openshift:
   kernel_arguments:
-    - crashkernel=1024M   
+    - crashkernel=512M   
 storage:
   files:
   - path: /root/.ssh/id_kdump
@@ -31,12 +31,12 @@ storage:
     overwrite: true
     contents:
       inline: | 
-        path /mnt/ocp_kdump/crash
+        path /var/ocp_kdump/crash
         ssh user@<ip_or_dns_address>
         sshkey /root/.ssh/id_kdump
         core_collector makedumpfile -F -l --message-level 1 -d 31
-        failure_action shell
-        
+        #failure_action shell
+        default shell
 
   - path: /etc/sysconfig/kdump 
     mode: 0644

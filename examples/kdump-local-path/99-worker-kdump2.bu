@@ -6,7 +6,7 @@ metadata:
     machineconfiguration.openshift.io/role: worker 
 openshift:
   kernel_arguments: 
-    - crashkernel=512G
+    - crashkernel=512M
 storage:
   files:
     - path: /etc/kdump.conf 

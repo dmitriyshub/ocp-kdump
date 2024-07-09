@@ -20,8 +20,8 @@ To ensure sufficient storage for vmcore dumps, it's **recommended** that storage
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash/` directory of the local file system.
 
-
 ### In Clustered Environments
+
 Cluster environments potentially invite their own unique obstacles to vmcore collection. Some clusterware provides functionality to fence nodes via the SysRq or an NMI allows for vmcore collection upon fencing a node.
 
 In addition to ensuring that the cluster and kdump configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test.
@@ -103,8 +103,11 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 - [kdumpctl(8) - control interface for kdump](https://www.linux.org/docs/man8/kdumpctl.html)
 
+- [dracut - low-level tool for generating an initramfs/initrd image](https://manpages.ubuntu.com/manpages/kinetic/man8/dracut.8.html)
+
 - [dracut.cmdline(7) - dracut kernel command line options](https://www.unix.com/man-page/linux/7/dracut.cmdline/)
 
+- [dracut-module-setup.sh - Github Repository](https://github.com/jesa7955/kexec-tools-fedora/blob/master/dracut-module-setup.sh)
 ---
 
 ### Issues and Solutions
@@ -118,5 +121,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 - [How to setup kdump to dump a vmcore on ssh location in Red Hat Openshift Container Platform nodes](https://access.redhat.com/solutions/6978127)
 
 - [kdump fails to generate vmcore with SysRq on servers installed with LEGACY BIOS and vga controller...](https://access.redhat.com/solutions/5770681)
+
+- [kdump failure when network requires multiple nics to reach dump target](https://access.redhat.com/solutions/3744271)
 
 ---
