@@ -77,6 +77,7 @@ ls -l /sys/fs/pstore
 ```
 
 - If The `MachineConfigPool` Status Changed to `Degraded` Due to Configuration File Content Mismatch, Its possible to Decode the Rendered `MachineConfig` File Content
+
 [on-disk validation fails on file content mismatch during MCO upgrade in OpenShift 4](https://access.redhat.com/solutions/5315421)
 
 ```bash
@@ -92,6 +93,7 @@ function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; } ;  urldecode "$(o
 ```
 
 - Extract the kdump `initramfs` Image for Troubleshooting `squashfs-root` Filesystem
+
 [How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/2037313#B)
 
 ```bash
