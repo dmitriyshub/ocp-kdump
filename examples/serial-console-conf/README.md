@@ -1,6 +1,6 @@
 # Configure Serial Console to Troubleshoot KDUMP Issues
 
-- [How does one set up a serial terminal and/or console in Red Hat Enterprise Linux?](https://access.redhat.com/articles/3166931)
+[How does one set up a serial terminal and/or console in Red Hat Enterprise Linux?](https://access.redhat.com/articles/3166931)
 
 - Create a Butane file for Kernel Arguments and systemd service
 
@@ -45,7 +45,7 @@ systemd:
         WantedBy=multi-user.target
 ```
 
-- Note: The primary console for system output will be the last console listed in the kernel parameters. In the above example, the VGA console `tty0` is the primary and the serial console is the secondary display. This means messages from init scripts will not go to the serial console, since it is the secondary console, but boot messages and critical warnings will go to the serial console. If init script messages need to be seen on the serial console as well, it should be made the primary by swapping the order of the console parameters.
+**Note** The primary console for system output will be the last console listed in the kernel parameters. In the above example, the VGA console `tty0` is the primary and the serial console is the secondary display. This means messages from init scripts will not go to the serial console, since it is the secondary console, but boot messages and critical warnings will go to the serial console. If init script messages need to be seen on the serial console as well, it should be made the primary by swapping the order of the console parameters.
 
 - Convert Butane file to MachineConfig YAML and Apply the MachineConfigs
 
