@@ -1,8 +1,8 @@
-### Configure Serial Console to Troubleshoot KDUMP Issues
+# Configure Serial Console to Troubleshoot KDUMP Issues
 
 - [How does one set up a serial terminal and/or console in Red Hat Enterprise Linux?](https://access.redhat.com/articles/3166931)
 
-1. Create a Butane file for Kernel Arguments and systemd service
+- Create a Butane file for Kernel Arguments and systemd service
 
 ```yaml
 variant: openshift
@@ -47,14 +47,14 @@ systemd:
 
 - Note: The primary console for system output will be the last console listed in the kernel parameters. In the above example, the VGA console `tty0` is the primary and the serial console is the secondary display. This means messages from init scripts will not go to the serial console, since it is the secondary console, but boot messages and critical warnings will go to the serial console. If init script messages need to be seen on the serial console as well, it should be made the primary by swapping the order of the console parameters.
 
-2. Convert Butane file to MachineConfig YAML and Apply the MachineConfigs
+- Convert Butane file to MachineConfig YAML and Apply the MachineConfigs
 
 ```bash
 butane 99-worker-getty-ttyS0.bu -o 99-worker-getty-ttyS0.yaml
 oc apply -f 99-worker-getty-ttyS0.yaml
 ```
 
-3. Monitor the `MachineConfigPool` and wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
+- Monitor the `MachineConfigPool` and wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
 
 ```bash
 watch oc get nodes,mcp
@@ -62,7 +62,7 @@ watch oc get nodes,mcp
 
 ---
 
-### Access Serial Console via CIMC's Serial Over LAN
+## Access Serial Console via CIMC's Serial Over LAN
 
 1. Open a web browser and navigate to the CIMC interface using the IP address or hostname of the Cisco bmc server and log in with user credentials
 
@@ -75,9 +75,9 @@ watch oc get nodes,mcp
 - Com Port: Choose the appropriate COM port (com0)
 - SSH Port: The default SSH port is typically 22, but CIMC might use a specific port like 2400. Make sure this port is noted for later use
 
-4. Save the Configuration
+- Save the Configuration
 
-5. To connect to the serial console via SSH, open a terminal on your local machine and use an SSH client to connect to the CIMC's IP address on the specified SSH port. For example: `ssh -p 2400 ocp@cimc_node_dns_address`
+- To connect to the serial console via SSH, open a terminal on your local machine and use an SSH client to connect to the CIMC's IP address on the specified SSH port. For example: `ssh -p 2400 ocp@cimc_node_dns_address`
 
 ---
 
