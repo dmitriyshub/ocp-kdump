@@ -1,4 +1,4 @@
-### KDUMP Examples
+# KDUMP Examples
 
 - [KDUMP with Local Path](./kdump-local-path/)
 
@@ -6,7 +6,7 @@
 
 - [KDUMP with PVC](./kdump-with-pvc/)
 
-- [KDUMP Job for Upload VMCORE files to S3 Bucket ](./kdump-ocp-job/)
+- [KDUMP Job for Upload VMCORE files to S3 Bucket](./kdump-ocp-job/)
 
 - [KDUMP Configuration files](./kdump-conf-files/)
 

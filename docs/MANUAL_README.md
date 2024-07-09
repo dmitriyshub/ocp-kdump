@@ -4,7 +4,7 @@
 
 - Modify `/etc/kdump.conf` and `/etc/sysconfig/kdump`
 
-- Use `rpm-ostree` to Add Kernel Parameter and Enable `kdump` 
+- Use `rpm-ostree` to Add Kernel Parameter and Enable `kdump`
 
 ```bash
 # Check and modify configuration files

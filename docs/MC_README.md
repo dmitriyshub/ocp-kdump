@@ -1,6 +1,6 @@
 # KDUMP Machineconfig Configuration
 
-1. Choose the Preffered Target Path (`local`/`ssh`) and Create Butane File
+- Choose the Preffered Target Path (`local`/`ssh`) and Create Butane File
 
 - Add `makedumpfile -F` Option Only for SSH target
 
@@ -62,14 +62,14 @@ systemd:
       enabled: true
 ```
 
-2. Convert Butane file to `yaml` and Apply the `MachineConfig`
+- Convert Butane file to `yaml` and Apply the `MachineConfig`
 
 ```bash
 butane 99-worker-kdump.bu -o 99-worker-kdump.yaml
 oc apply -f 99-worker-kdump.yaml
 ```
 
-3. Monitor the `MachineConfigPool` and wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
+- Monitor the `MachineConfigPool` and wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
 
 ```bash
 watch oc get nodes,mcp
