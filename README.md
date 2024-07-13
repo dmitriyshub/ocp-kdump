@@ -20,6 +20,36 @@ To ensure sufficient storage for vmcore dumps, it's **recommended** that storage
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash/` directory of the local file system.
 
+## Controlling which events trigger a Kernel Panic
+
+There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
+
+- **System hangs due to NMI:** Occurs when a Non-Maskable Interrupt is issued, usually due to a hardware fault
+
+```bash
+kernel.unknown_nmi_panic = 1
+kernel.panic_on_io_nmi = 1
+kernel.panic_on_unrecovered_nmi = 1
+```
+
+- **Out of memory (OOM) Kill event:** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory)
+
+```bash
+vm.panic_on_oom = 1
+```
+
+- **CPU Soft Lockup event:** Occurs when a task is using the CPU for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds)
+
+```bash
+kernel.softlockup_panic = 1
+```
+
+- **Hung / Blocked Task event:** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds)
+
+```bash
+kernel.hung_task_panic = 1
+```
+
 ## In Clustered Environments
 
 Cluster environments potentially invite their own unique obstacles to vmcore collection. Some clusterware provides functionality to fence nodes via the SysRq or an NMI allows for vmcore collection upon fencing a node.
@@ -125,5 +155,9 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 - [kdump failure when network requires multiple nics to reach dump target](https://access.redhat.com/solutions/3744271)
 
 - [What is early kdump support and how do I configure it?](https://access.redhat.com/solutions/3700611)
+
+- [How to troubleshoot kernel crashes, hangs, or reboots with kdump on Red Hat Enterprise Linux](https://access.redhat.com/solutions/6038)
+
+- [How do I configure kdump for use with the RHEL 6, 7, 8 High Availability Add-On?](https://access.redhat.com/articles/67570)
 
 ---
