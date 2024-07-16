@@ -1,7 +1,5 @@
 # KDUMP in OpenShift CoreOS Baremetal Nodes
 
----
-
 `Kdump` is a kernel feature that allows crash dumps to be created during a kernel crash. It produces a `vmcore`(a system-wide coredump, which is the recorded state of the working memory in the host at the time of the crash) that can be analyzed for the root cause analysis of the crash.
 
 `kdump` uses a mechanism called `kexec` to boot into a second kernel whenever the system crashes. This second kernel, often called the crash kernel, boots with very little memory and captures the dump image.
@@ -88,7 +86,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ---
 
-### Table of Content
+### 📖 Table of Content
 
 - [Manual Configuration](/docs/MANUAL_README.md)
 
@@ -96,15 +94,17 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 - [KDUMP Troubleshooting](/docs/TROUBLESHOOT_README.md)
 
-- [Configure Serial Console to Troubleshoot KDUMP Issues](/examples/serial-console-conf/README.md)
+- [Configure Serial Console to Troubleshoot KDUMP Issues](/docs/SERIAL_CONSOLE_README.md)
 
 - [KDUMP examples](/examples/README.md)
 
 ---
 
-### Documentation and Articles
+### 🔗 Documentation and Articles
 
-- [The importance of configuring kernel dumps](https://www.redhat.com/en/blog/importance-configuring-kernel-dumps-rhel) <- Recommended
+- [The importance of configuring kernel dumps](https://www.redhat.com/en/blog/importance-configuring-kernel-dumps-rhel) **<-- Recommended**
+
+- [A vmcore for your system may be smaller than you think!](https://blogs.oracle.com/linux/post/vmcore-smaller-than-you-think)
 
 - [Configuring kdump on the command line (RHEL8 CoreOS 4.12 and lower)](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/configuring-kdump-on-the-command-line_managing-monitoring-and-updating-the-kernel)
 
@@ -114,11 +114,15 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 - [Supported kdump configurations and targets (RHEL9 CoreOS 4.13 and upper)](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/managing_monitoring_and_updating_the_kernel/supported-kdump-configurations-and-targets_managing-monitoring-and-updating-the-kernel)
 
-- [Untestand the Machine Config Pool — OpenShift Container Platform 4.x](https://kamsjec.medium.com/machine-config-pool-openshift-container-platform-4-x-c515e7a093fb)
+- [Untestand the Machine Config Pool (OpenShift Container Platform 4.x)](https://kamsjec.medium.com/machine-config-pool-openshift-container-platform-4-x-c515e7a093fb)
+
+- [Butane file Configuration Specifications](https//coreos.github.io/butane/specs/)
+
+- [Fedora CoreOs Documantation](https://docs.fedoraproject.org/en-US/fedora-coreos/)
 
 ---
 
-### Manual Pages
+### 🔗 Manual Pages
 
 - **NOTE:** Always refer to your **CoreOS** tools version manual page
 
@@ -140,9 +144,9 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ---
 
-### Issues and Solutions
+### 🔗 Issues and Solutions
 
-- [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081) **(Recommended)**
+- [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081) **<-- Recommended**
 
 - [Setting up kdump in Red Hat Openshift Container Platform and Red Hat CoreOS](https://access.redhat.com/solutions/5907731)
 
@@ -158,6 +162,10 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 - [How to troubleshoot kernel crashes, hangs, or reboots with kdump on Red Hat Enterprise Linux](https://access.redhat.com/solutions/6038)
 
+- [Kdump failes with "kdump: get_host_ip exited with non-zero status!"](https://access.redhat.com/solutions/5927171)
+
 - [How do I configure kdump for use with the RHEL 6, 7, 8 High Availability Add-On?](https://access.redhat.com/articles/67570)
+
+- [How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/6038)
 
 ---

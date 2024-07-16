@@ -2,7 +2,7 @@
 
 - [KDUMP with Local Path](./kdump-local-path/)
 
-- [KDUMP with SSH Path](./kdump-with-ssh/)
+- [KDUMP with SSH Path](./kdump-ssh-path/)
 
 - [KDUMP with PVC](./kdump-with-pvc/)
 
