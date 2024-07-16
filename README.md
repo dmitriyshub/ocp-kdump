@@ -124,28 +124,6 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ---
 
-### 🔗 Manual Pages
-
-- **NOTE:** Always refer to your **CoreOS** tools version manual page
-
-- [kexec(8) - Linux man page](https://linux.die.net/man/8/kexec)
-
-- [makedumpfile(8) - make a small dumpfile of kdump](https://www.linux.org/docs/man5/makedumpfile.html)
-
-- [kdump.conf(5) - configuration file for kdump kernel](https://linux.die.net/man/5/kdump.conf)
-
-- [kdump(5) - Configuration of kdump](https://www.unix.com/man-page/suse/5/kdump/)
-
-- [kdumpctl(8) - control interface for kdump](https://www.linux.org/docs/man8/kdumpctl.html)
-
-- [dracut - low-level tool for generating an initramfs/initrd image](https://manpages.ubuntu.com/manpages/kinetic/man8/dracut.8.html)
-
-- [dracut.cmdline(7) - dracut kernel command line options](https://www.unix.com/man-page/linux/7/dracut.cmdline/)
-
-- [dracut-module-setup.sh - Github Repository](https://github.com/jesa7955/kexec-tools-fedora/blob/master/dracut-module-setup.sh)
-
----
-
 ### 🔗 Issues and Solutions
 
 - [Common kdump Configuration Mistakes](https://access.redhat.com/articles/5332081) **<-- Recommended**
@@ -169,5 +147,27 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 - [How do I configure kdump for use with the RHEL 6, 7, 8 High Availability Add-On?](https://access.redhat.com/articles/67570)
 
 - [How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/6038)
+
+---
+
+### 🔗 Manual Pages
+
+**NOTE:** Always refer to your **CoreOS** tools version manual page
+
+- [kexec(8) - Linux man page](https://linux.die.net/man/8/kexec)
+
+- [makedumpfile(8) - make a small dumpfile of kdump](https://www.linux.org/docs/man5/makedumpfile.html)
+
+- [kdump.conf(5) - configuration file for kdump kernel](https://linux.die.net/man/5/kdump.conf)
+
+- [kdump(5) - Configuration of kdump](https://www.unix.com/man-page/suse/5/kdump/)
+
+- [kdumpctl(8) - control interface for kdump](https://www.linux.org/docs/man8/kdumpctl.html)
+
+- [dracut - low-level tool for generating an initramfs/initrd image](https://manpages.ubuntu.com/manpages/kinetic/man8/dracut.8.html)
+
+- [dracut.cmdline(7) - dracut kernel command line options](https://www.unix.com/man-page/linux/7/dracut.cmdline/)
+
+- [dracut-module-setup.sh - Github Repository](https://github.com/jesa7955/kexec-tools-fedora/blob/master/dracut-module-setup.sh)
 
 ---
