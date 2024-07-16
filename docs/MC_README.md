@@ -90,6 +90,10 @@ echo c > /proc/sysrq-trigger
 
 ---
 
+[Local Path Examples](../examples/kdump-local-path/)
+
+[SSH Path Examples](../examples/kdump-ssh-path/)
+
 [Return to main](../README.md)
 
 ---

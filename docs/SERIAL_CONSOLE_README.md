@@ -82,7 +82,7 @@ watch oc get nodes,mcp
 ---
 
 [Show Examples](../examples/serial-console-conf/)
-
+  
 [Return to main](../README.md)
 
 ---
