@@ -96,7 +96,9 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 - [Configure Serial Console to Troubleshoot KDUMP Issues](/docs/SERIAL_CONSOLE_README.md)
 
-- [KDUMP examples](/examples/README.md)
+- [Using Crash Tool to Analyze a VMCORE](/docs/CRASH_README.md)
+
+- [KDUMP Examples](/examples/README.md)
 
 ---
 
