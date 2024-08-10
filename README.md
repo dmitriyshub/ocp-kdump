@@ -88,15 +88,19 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ### 📖 Table of Content
 
-- [Manual Configuration](/docs/MANUAL_README.md)
+- [KDUMP Manual Configuration](/docs/KDUMP_MANUAL_README.md)
 
-- [Machineconfig Configuration](/docs/MC_README.md)
+- [KDUMP Machineconfig Configuration](/docs/KDUMP_MC_README.md)
 
-- [KDUMP Troubleshooting](/docs/TROUBLESHOOT_README.md)
+- [KDUMP Troubleshooting](/docs/KDUMP_TROUBLESHOOT_README.md)
 
 - [Configure Serial Console to Troubleshoot KDUMP Issues](/docs/SERIAL_CONSOLE_README.md)
 
-- [Using Crash Tool to Analyze a VMCORE](/docs/CRASH_README.md)
+- [Manual Configuration of Crash Tool to Analyze a VMCORE](/docs/CRASH_MANUAL_README.md)
+
+- [Analyzing Kernel Crashes with a Custom Crash Utility Container](/docs/CRASH_QUICK_README.md)
+
+- [Crash Tool Guide](/docs/CRASH_TOOL_README.md)
 
 - [KDUMP Examples](/examples/README.md)
 
@@ -121,6 +125,8 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 - [Butane file Configuration Specifications](https//coreos.github.io/butane/specs/)
 
 - [Fedora CoreOs Documantation](https://docs.fedoraproject.org/en-US/fedora-coreos/)
+
+- [White Paper: Crash Utility by David Anderson](https://crash-utility.github.io/crash_whitepaper.html) **<-- Recommended**
 
 ---
 

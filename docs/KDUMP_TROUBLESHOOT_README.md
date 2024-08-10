@@ -32,11 +32,13 @@ cat /root/.ssh/config
 cat /root/.ssh/id_kdump
 ```
 
-- Add Additional Kernel Modules `/etc/kdump.conf`
+- Check initramfs Image Kernel Modules
 
 ```bash
 lsinitrd /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img | grep sd_mod
 ```
+
+- Add Additional Kernel Modules `/etc/kdump.conf`
 
 ```bash
 extra_modules megaraid_sas sd_mod
@@ -56,7 +58,7 @@ KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swio
 KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=60 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never novmcoredd hest_disable module_blacklist=igb,ixgbe"
 ```
 
-- To Apply New `kdump` Configuration Execute One of `kdumpctl` Examples After Every Change
+- To Apply New `kdump` Configuration Execute One or More of `kdumpctl` Examples After Every Change
 
 ```bash
 kdumpctl reload # Reload the crash kernel image and initramfs without triggering a rebuild.

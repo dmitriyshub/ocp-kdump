@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kdump-ssh-private-key
+  namespace: openshift-config
+type: Opaque
+data:
+  kdump-id-rsa: SSH_PUBLIC_KEY_CONTENT 
