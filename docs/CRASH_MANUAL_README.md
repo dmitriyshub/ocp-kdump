@@ -71,6 +71,12 @@ dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vm
 
 ---
 
+[Crash Tool Guide](CRASH_TOOL_README.md)
+
+---
+
+---
+
 [Return to main](../README.md)
 
 ---
