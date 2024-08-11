@@ -2,6 +2,24 @@
 
 The crash tool is a powerful utility for analyzing the state of a Linux system after a kernel crash, Below are some essential commands and their usage.
 
+---
+
+## Kernel Types
+
+- `vmlinux` is the uncompressed kernel code, `vmlinuz`, and `vmlinux.bin` are compressed versions for booting. `zimage` is an older compressed format, and `bzImage` is an improved version.
+
+[Differences Between vmlinux, vmlinuz, vmlinux.bin, zimage, and bzimage](https://www.baeldung.com/linux/kernel-images)
+
+- `vmlinuz` is a compressed file, but crash requires an uncompressed file `vmlinux`, which is compiled with `-g` option.
+Make sure your kernel is compiled with `-g` option, and then you can get an uncompressed `vmlinux` file from compressed `vmlinuz`, using the method as follows: (Not Recommended, Use it only with custom/unofficial kernels)
+
+```bash
+od -t x1 -A d /host/usr/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinuz | grep "1f 8b 08"
+dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vmlinux
+```
+
+---
+
 ## Usage
 
 - For help on any command below, enter `help <command>`
@@ -199,11 +217,11 @@ crash> foreach files | grep "locked"
 
 Correlate the data from the crash tool, dmesg, and any other logs. Typical causes might include:
 
-- Kernel Panics: Often caused by hardware failures, driver issues, or bugs in the kernel
+- Kernel Panics often caused by hardware failures, driver issues, or bugs in the kernel
 
-- OOM (Out of Memory): Indicates a memory leak or inadequate memory allocation for your workload
+- OOM (Out of Memory) Indicates a memory leak or inadequate memory allocation for your workload
 
-- Hardware Issues: Look for signs of failing hardware, such as CPU or memory errors
+- For Hardware Issues Look for signs of failing hardware, such as CPU or memory errors
 
 Take Remedial Actions
 

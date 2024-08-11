@@ -55,20 +55,29 @@ To start the crash utility, pass the following two necessary parameters:
 crash /usr/lib/debug/lib/modules/<kernel-version>/vmlinux /path/to/vmcore
 ```
 
----
-
-## Kernel Types
-
-- `vmlinux` is the uncompressed kernel code, `vmlinuz`, and `vmlinux.bin` are compressed versions for booting. `zimage` is an older compressed format, and `bzImage` is an improved version.
-
-[Differences Between vmlinux, vmlinuz, vmlinux.bin, zimage, and bzimage](https://www.baeldung.com/linux/kernel-images)
-
-- `vmlinuz` is a compressed file, but crash requires an uncompressed file `vmlinux`, which is compiled with `-g` option.
-Make sure your kernel is compiled with `-g` option, and then you can get an uncompressed `vmlinux` file from compressed `vmlinuz`, using the method as follows: (Not Recommended, Use it only with custom/unofficial kernels)
-
 ```bash
-od -t x1 -A d /host/usr/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinuz | grep "1f 8b 08"
-dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vmlinux
+crash /usr/lib/debug/lib/modules/4.18.0-5.el8.x86_64/vmlinux /vmcore
+...
+WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
+
+      KERNEL: /usr/lib/debug/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinux
+    DUMPFILE: /vmcore  [PARTIAL DUMP]
+        CPUS: 80
+        DATE: Sun Jun 23 10:45:14 UTC 2024
+      UPTIME: 00:16:20
+LOAD AVERAGE: 0.17, 0.36, 0.49
+       TASKS: 2220
+    NODENAME: node-name.domain.name
+     RELEASE: 4.18.0-372.73.1.el8_6.x86_64 # Kernel Version
+     VERSION: #1 SMP Fri Sep 8 13:16:27 EDT 2023
+     MACHINE: x86_64  (2400 Mhz)
+      MEMORY: 766.7 GB
+       PANIC: "sysrq: SysRq : Trigger a crash" # <<- Panic Process 
+         PID: 27435 # <<- Panic Process PID
+     COMMAND: "bash"
+        TASK: ffff9f4e8e8f0000  [THREAD_INFO: ffff9f4e8e8f0000]
+         CPU: 14
+       STATE: TASK_RUNNING (SYSRQ)
 ```
 
 ---
