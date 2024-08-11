@@ -30,6 +30,8 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 
 ## Controlling which events trigger a Kernel Panic
 
+When you enable kdump on a system, its crucial to understand the conditions under which a crash dump will be triggered. By default, kdump doesn’t automatically trigger on every possible failure or crash scenario. it relies on specific kernel parameters to determine when to activate and capture a dump.
+
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
 - Through the kernel command line (e.g. via a MachineConfig)
@@ -101,6 +103,22 @@ kernel.hung_task_panic = 1
     - "watchdog_thresh=10"
     - "mce=0"
 ```
+
+### Why KDUMP Configuration Matters
+
+Properly configuring both the crash triggers and memory reservation is essential for kdump to function as intended.
+
+- By setting the appropriate parameters (e.g. kernel.panic=1, vm.panic_on_oom=1), you ensure that kdump will trigger on specific events, allowing you to capture memory dumps that are critical for diagnosing issues
+
+- Without these parameters, your system might simply reboot or remain unresponsive during critical failures, leaving you without valuable diagnostic data
+
+Enabling kdump without configuring the associated kernel parameters and memory reservation means that kdump might not activate during critical events, leading to missed opportunities for diagnostics. To ensure kdump functions effectively, it's important to:
+
+- Set kernel parameters like `kernel.panic`, `vm.panic_on_oom`, and others according to the events you want to capture
+
+- Configure crashkernel to reserve sufficient memory for kdump to operate
+
+These steps help ensure that when a crash occurs, kdump can capture the necessary information to diagnose the underlying issue.
 
 ## In Clustered Environments
 
