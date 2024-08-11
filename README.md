@@ -18,7 +18,27 @@ To ensure sufficient storage for vmcore dumps, it's **recommended** that storage
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash` directory of the local file system.
 
+---
+
+## Kdump Procedure Overview
+
+1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
+
+2. The system panics
+
+3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
+
+4. The normal kernel's memory is captured into a `vmcore`
+
+---
+
 ## Controlling which events trigger a Kernel Panic
+
+Applying kernel parameters to control kdump behavior can be done in two primary ways:
+
+- Through the kernel command line (e.g. via a MachineConfig)
+
+- By manually setting the parameters at runtime through system files (e.g., using echo commands in /proc/sys/ or /sys/)
 
 There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
 
@@ -40,6 +60,12 @@ nmi_watchdog = 1
 
 ```bash
 watchdog_thresh = 10
+```
+
+- **Machine Check Exceptions (MCE)** indicate hardware errors and configure the system to panic on MCE events
+
+```bash
+mce = 0
 ```
 
 - **Out of memory (OOM) Kill event:** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory)
@@ -66,23 +92,63 @@ kernel.hardlockup_panic = 1
 kernel.hung_task_panic = 1
 ```
 
+- When configuring this parameters with a MachineConfig
+
+```yaml
+  kernelArguments:
+    - "crashkernel=512M"
+    - "vm.panic_on_oom=1"
+    - "kernel.panic=10"
+    - "kernel.softlockup_panic=1"
+    - "kernel.hung_task_panic=1"
+    - "nmi_watchdog=1"
+    - "watchdog_thresh=10"
+    - "mce=0"
+```
+
 ## In Clustered Environments
 
 Cluster environments potentially invite their own unique obstacles to vmcore collection. Some clusterware provides functionality to fence nodes via the SysRq or an NMI allows for vmcore collection upon fencing a node.
 
 In addition to ensuring that the cluster and kdump configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test or try to extand the fence timeout.
 
----
+Integrating kdump with a Node Self Remediation Operator in a cluster environment involves configuring both systems to work in harmony. Here is how you can set up and adjust the parameters of the SNR operator to optimize its behavior with kdump, ensuring that the system can properly handle kernel crashes and initiate remediation processes effectively.
 
-## Kdump Procedure
+Node Self Remediation Operator is a component that monitors node health and performs remediation actions (like rebooting) if it detects issues such as unresponsive nodes or specific failure conditions.
 
-1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
+### **Key Parameters**
 
-2. The system panics
+`apiServerTimeout` Defines the timeout for communication with the API server. Setting this to `5s` ensures that the SNR operator does not wait too long for API server responses, which can be crucial in a crash scenario where quick detection and response are necessary
 
-3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
+`peerApiServerTimeout` Similar to `apiServerTimeout`, this sets the timeout for communication with peer nodes. A `5s` timeout helps ensure that the operator detects issues promptly when interacting with other nodes
 
-4. The normal kernel's memory is captured into a `vmcore`
+`isSoftwareRebootEnabled` When set to true, this allows the SNR operator to initiate a software reboot if necessary. This is important for kdump as it ensures that the system can reboot cleanly and attempt to capture a dump if a crash occurs
+
+`watchdogFilePath` Points to the watchdog device (e.g. `/dev/watchdog`). This device is used for hardware watchdog functions, which can help reset the system in case of a hang or severe issue. Ensure that kdump is properly configured to work with your watchdog device
+
+`peerDialTimeout` Sets the timeout for dialing peers. A `5s` timeout helps ensure that peer communication issues are detected quickly
+
+`peerUpdateInterval` Defines how often the operator updates the status of peers. Setting this to `15m` helps balance between frequent checks and resource usage
+
+`apiCheckInterval` Sets the interval at which the SNR operator checks the API server’s health. A `15s` interval is reasonable for detecting issues without overwhelming the system with checks
+
+`peerRequestTimeout` Timeout for peer requests. A `5s` timeout ensures timely detection of communication problems with peers.
+
+`safeTimeToAssumeNodeRebootedSeconds` Time to wait before assuming a node is rebooted. A `180s` setting provides a buffer to handle scenarios where the node may be recovering or performing tasks post-crash
+
+`maxApiErrorThreshold` Maximum number of API errors before taking action. Setting this to `3` helps in determining when to act on persistent issues with the API server.
+
+### **Recommendations**
+
+- **Monitor and Adjust Timeouts** Fine-tune the timeouts and intervals based on your environment performance and network conditions. For example, if your cluster nodes are slow to respond or network latency is high, you might need to adjust the timeouts accordingly
+
+- **Enable Software Reboot** Ensure that `isSoftwareRebootEnabled` is set to true so that the operator can handle crashes effectively, allowing the system to reboot and kdump to capture the necessary dump
+
+- **Configure Watchdog** Make sure that the `watchdogFilePath` is correctly set and that the hardware watchdog is functioning as expected to reset unresponsive nodes
+
+- **Test Remediation Actions** Perform testing to ensure that the SNR operator can handle various crash scenarios, including those where kdump is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected.
+
+By aligning these parameters and ensuring proper configuration, you can enhance the effectiveness of kdump and the Node Self Remediation Operator in managing and recovering from crashes in a cluster environment.
 
 ---
 
