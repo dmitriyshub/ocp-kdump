@@ -18,8 +18,10 @@ Together these files provide a comprehensive view of the system's state before, 
 
 - [Differences Between vmlinux, vmlinuz, vmlinux.bin, zimage, and bzimage](https://www.baeldung.com/linux/kernel-images)
 
+## To uncompress the kernel use the command below (Use it only with custom/unofficial kernels <<- Not Recommended)
+
 - `vmlinuz` is a compressed file, but crash requires an uncompressed file `vmlinux`, which is compiled with `-g` option.
-Make sure your kernel is compiled with `-g` option, and then you can get an uncompressed `vmlinux` file from compressed `vmlinuz`, using the method as follows: (Not Recommended, Use it only with custom/unofficial kernels)
+Make sure your kernel is compiled with `-g` option, and then you can get an uncompressed `vmlinux` file from compressed `vmlinuz`, using the method as follows:
 
 ```bash
 od -t x1 -A d /host/usr/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinuz | grep "1f 8b 08"
