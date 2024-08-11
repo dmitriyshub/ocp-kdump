@@ -18,8 +18,6 @@ To ensure sufficient storage for vmcore dumps, it's **recommended** that storage
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash` directory of the local file system.
 
----
-
 ## Kdump Procedure Overview
 
 1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
@@ -29,8 +27,6 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
 
 4. The normal kernel's memory is captured into a `vmcore`
-
----
 
 ## Controlling which events trigger a Kernel Panic
 
@@ -92,7 +88,7 @@ kernel.hardlockup_panic = 1
 kernel.hung_task_panic = 1
 ```
 
-- When configuring this parameters with a MachineConfig
+- Use `kernelArguments` when configuring this parameters with a MachineConfig
 
 ```yaml
   kernelArguments:
@@ -150,8 +146,6 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 By aligning these parameters and ensuring proper configuration, you can enhance the effectiveness of kdump and the Node Self Remediation Operator in managing and recovering from crashes in a cluster environment.
 
----
-
 ## Kdump Testing Summary Steps
 
 1. Test the `kdump` in rhel host and ensure that everything is working correctly and the `kdump` generates the vmcore files in the target path successfully (Optionl)
@@ -180,7 +174,7 @@ By aligning these parameters and ensuring proper configuration, you can enhance 
 
 - [KDUMP Examples](/examples/README.md)
 
-#### Crash Tool Usage
+#### Crash Tool Configuration and Usage
 
 - [Using Crash Tool RPM to analyze a vmcore](/docs/CRASH_MANUAL_README.md)
 
