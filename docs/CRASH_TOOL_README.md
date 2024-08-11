@@ -1,5 +1,46 @@
 # Crash Tool Guide
 
+The crash tool is a powerful utility for analyzing the state of a Linux system after a kernel crash, Below are some essential commands and their usage.
+
+## Usage
+
+- For help on any command below, enter `help <command>`
+
+```bash
+crash> help bt
+crash> help log
+```
+
+- To display basic system information, use the `sys` command
+
+- To list all loaded kernel modules, use the `mod` command
+
+- To list all loaded kernel modules, use the `ps` command
+
+- To display the kernel message buffer, use the `log` (Type `help log` for more information)
+
+- To display the kernel stack trace, use the `bt` command (Type `bt <pid>` to display the backtrace of a specific process or type `help bt`)
+
+- To display the status of processes in the system, use the `ps` command (Use `ps <pid>` to display the status of a single specific process or type `help ps`)
+
+- To display basic virtual memory information, type the `vm` command at the interactive prompt
+
+- To display memory usage information, use the `kmem -i`
+
+- To analyze the slab allocator, which manages kernel memory allocations, use the `kmem -s`
+
+- To analyze the slab allocator, which manages kernel memory allocations
+
+```bash
+crash> struct task_struct.<field> <task_struct_address>
+```
+
+---
+
+## Start Crash Tool and Start Analyzing VMCORE files
+
+- When starting a crash tool, we'll get detailed system information
+
 ```bash
 podman run --rm -it -v /path/to/vmcore:/vmcore:Z kdump-crash:4.18.0-372.73.1.el8_6 /vmcore
 ...
@@ -25,15 +66,13 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
        STATE: TASK_RUNNING (SYSRQ)
 ```
 
-**NOTE:** The Output With Panic Process and Message `PANIC: "sysrq: SysRq : Trigger a crash"` `PID: 27435`
-
-- For help on any command below, enter `help <command>`
+- You may see warnings like `kernel relocated`, This indicates that the kernel image was relocated in memory, and symbols were patched accordingly
 
 ```bash
-crash> help bt
-crash> help log
-...
+WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 ```
+
+**NOTE:** The Output With Panic Process and Message `PANIC: "sysrq: SysRq : Trigger a crash"` `PID: 27435`
 
 ## Start with the following commands for a high-level overview
 
@@ -175,32 +214,6 @@ Take Remedial Actions
 - Adjust system configurations (e.g., memory limits, swap space) if the crash was related to resource exhaustion
 
 - Always ensure your system and tools are up to date, and consult additional resources if you encounter uncommon issues
-
-## Usage
-
-- To display basic system information, use the `sys` command
-
-- To list all loaded kernel modules, use the `mod` command
-
-- To list all loaded kernel modules, use the `ps` command
-
-- To display the kernel message buffer, use the `log` (Type `help log` for more information)
-
-- To display the kernel stack trace, use the `bt` command (Type `bt <pid>` to display the backtrace of a specific process or type `help bt`)
-
-- To display the status of processes in the system, use the `ps` command (Use `ps <pid>` to display the status of a single specific process or type `help ps`)
-
-- To display basic virtual memory information, type the `vm` command at the interactive prompt
-
-- To display memory usage information, use the `kmem -i`
-
-- To analyze the slab allocator, which manages kernel memory allocations, use the `kmem -s`
-
-- To analyze the slab allocator, which manages kernel memory allocations
-
-```bash
-crash> struct task_struct.<field> <task_struct_address>
-```
 
 ---
 

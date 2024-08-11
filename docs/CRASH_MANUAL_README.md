@@ -1,6 +1,8 @@
-# Using `crash` Tool to analyze a vmcore
+# Using Crash Tool RPM to analyze a vmcore
 
 To determine the cause of the system crash, you can use the `crash` utility, which provides an interactive prompt very similar to the GNU Debugger (GDB). This utility allows you to interactively analyze a running Linux system as well as a core dump created by `kdump`, `netdump`, `diskdump`, or  `xendump` as well as a running Linux system.
+
+Kernel crashes can be tricky to diagnose, but with the crash utility, you can gain valuable insights into the causes of system failures.
 
 - [Managing, Monitoring and updating the Kernel - Analyizing a core dump](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/analyzing-a-core-dump_managing-monitoring-and-updating-the-kernel#analyzing-a-core-dump_managing-monitoring-and-updating-the-kernel)
 

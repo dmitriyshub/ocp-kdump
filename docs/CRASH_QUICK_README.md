@@ -1,6 +1,10 @@
-# Analyzing Kernel Crashes with a Custom Crash Utility Container
+# Using Crash Tool Custom Container to Analyze a vmcore
 
-Kernel crashes can be tricky to diagnose, but with the crash utility, you can gain valuable insights into the causes of system failures. You can use a custom container image pre-configured with the crash tool to streamline this process. This setup lets you quickly analyze vmcore files by simply mounting them into the container.
+To determine the cause of the system crash, you can use the `crash` utility, which provides an interactive prompt very similar to the GNU Debugger (GDB). This utility allows you to interactively analyze a running Linux system as well as a core dump created by `kdump`, `netdump`, `diskdump`, or  `xendump` as well as a running Linux system.
+
+Kernel crashes can be tricky to diagnose, but with the crash utility, you can gain valuable insights into the causes of system failures.
+
+You can use a custom container image pre-configured with the crash tool to streamline this process. This setup lets you quickly analyze vmcore files by simply mounting them into the container.
 
 ## Build a new container image with crash tool and the kernel debuginfo packages
 
@@ -33,10 +37,10 @@ ENTRYPOINT ["crash", /usr/lib/debug/lib/modules/<kernel.version>/vmlinux]
 ```
 
 ```bash
-podman build -t registry.url/kdump-crash:<kernel.version>
+podman build -t registry.url/kdump-crash:<kernel.version> .
 ```
 
-## Use The Crash Tool Pre Configured Container Image
+## Use The Pre Configured Container Image with crash tool and kernel debuginfo requirements
 
 The image is configured with all the necessary tools and dependencies for the crash utility kernel version `kdump-crash-tool:<kernel.version>`
 

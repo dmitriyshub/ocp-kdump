@@ -1,6 +1,6 @@
 # KDUMP in OpenShift CoreOS Baremetal Nodes
 
-`Kdump` is a kernel feature that allows crash dumps to be created during a kernel crash. It produces a `vmcore`(a system-wide coredump, which is the recorded state of the working memory in the host at the time of the crash) that can be analyzed for the root cause analysis of the crash.
+`Kdump` is a kernel feature that allows crash dumps to be created during a kernel crash. It produces a `vmcore`(a system-wide coredump), which is the recorded state of the working memory in the host at the time of the crash, that can be analyzed for the root cause analysis of the crash.
 
 `kdump` uses a mechanism called `kexec` to boot into a second kernel whenever the system crashes. This second kernel, often called the crash kernel, boots with very little memory and captures the dump image.
 
@@ -16,7 +16,7 @@ The `kdump` service uses a `core_collector` program to capture the crash dump im
 
 To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
 
-The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash/` directory of the local file system.
+The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash` directory of the local file system.
 
 ## Controlling which events trigger a Kernel Panic
 
@@ -28,6 +28,18 @@ There are several parameters that control under which circumstances kdump is act
 kernel.unknown_nmi_panic = 1
 kernel.panic_on_io_nmi = 1
 kernel.panic_on_unrecovered_nmi = 1
+```
+
+- Control NMI behavior using the `nmi_watchdog` parameter
+
+```bash
+nmi_watchdog = 1
+```
+
+- Configure the watchdog timeout threshold using `watchdog_thresh`
+
+```bash
+watchdog_thresh = 10
 ```
 
 - **Out of memory (OOM) Kill event:** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory)
@@ -42,6 +54,12 @@ vm.panic_on_oom = 1
 kernel.softlockup_panic = 1
 ```
 
+- **CPU Hard Lockup event**  More severe than soft lockups, typically indicating that a CPU has stopped working entirely
+
+```bash
+kernel.hardlockup_panic = 1
+```
+
 - **Hung / Blocked Task event:** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds)
 
 ```bash
@@ -52,7 +70,7 @@ kernel.hung_task_panic = 1
 
 Cluster environments potentially invite their own unique obstacles to vmcore collection. Some clusterware provides functionality to fence nodes via the SysRq or an NMI allows for vmcore collection upon fencing a node.
 
-In addition to ensuring that the cluster and kdump configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test.
+In addition to ensuring that the cluster and kdump configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test or try to extand the fence timeout.
 
 ---
 
@@ -68,7 +86,7 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ---
 
-## Summary Steps
+## Kdump Testing Summary Steps
 
 1. Test the `kdump` in rhel host and ensure that everything is working correctly and the `kdump` generates the vmcore files in the target path successfully (Optionl)
 
@@ -88,21 +106,27 @@ In addition to ensuring that the cluster and kdump configuration is sound, if a 
 
 ### 📖 Table of Content
 
+#### KDUMP Configuration and Installation
+
 - [KDUMP Manual Configuration](/docs/KDUMP_MANUAL_README.md)
 
 - [KDUMP Machineconfig Configuration](/docs/KDUMP_MC_README.md)
+
+- [KDUMP Examples](/examples/README.md)
+
+#### Crash Tool Usage
+
+- [Using Crash Tool RPM to analyze a vmcore](/docs/CRASH_MANUAL_README.md)
+
+- [Using Crash Tool Custom Container to Analyze a vmcore](/docs/CRASH_QUICK_README.md)
+
+#### KDUMP and VMCORE Troubleshooting
 
 - [KDUMP Troubleshooting](/docs/KDUMP_TROUBLESHOOT_README.md)
 
 - [Configure Serial Console to Troubleshoot KDUMP Issues](/docs/SERIAL_CONSOLE_README.md)
 
-- [Manual Configuration of Crash Tool to Analyze a VMCORE](/docs/CRASH_MANUAL_README.md)
-
-- [Analyzing Kernel Crashes with a Custom Crash Utility Container](/docs/CRASH_QUICK_README.md)
-
 - [Crash Tool Guide](/docs/CRASH_TOOL_README.md)
-
-- [KDUMP Examples](/examples/README.md)
 
 ---
 
