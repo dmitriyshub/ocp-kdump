@@ -1,6 +1,6 @@
 # Containerfile RPM Requirements
 
-- **NOTE** This file is only a reference for which rpm packages the crash tool container requires!
+**NOTE** This file is only a reference for which rpm packages the crash tool container requires!
 
 - Always check the CoreOS kernel version before download the debuginfo packages
 
