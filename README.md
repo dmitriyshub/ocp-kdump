@@ -108,6 +108,8 @@ Cluster environments potentially invite their own unique obstacles to vmcore col
 
 In addition to ensuring that the cluster and kdump configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test or try to extand the fence timeout.
 
+## KDUMP With Node Self Remediation Operator
+
 Integrating kdump with a Node Self Remediation Operator in a cluster environment involves configuring both systems to work in harmony. Here is how you can set up and adjust the parameters of the SNR operator to optimize its behavior with kdump, ensuring that the system can properly handle kernel crashes and initiate remediation processes effectively.
 
 Node Self Remediation Operator is a component that monitors node health and performs remediation actions (like rebooting) if it detects issues such as unresponsive nodes or specific failure conditions.
