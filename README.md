@@ -114,7 +114,7 @@ Integrating kdump with a Node Self Remediation Operator in a cluster environment
 
 Node Self Remediation Operator is a component that monitors node health and performs remediation actions (like rebooting) if it detects issues such as unresponsive nodes or specific failure conditions.
 
-### **Key Parameters**
+### Node Self Remediation Configuration **Key Parameters**
 
 `apiServerTimeout` Defines the timeout for communication with the API server. Setting this to `5s` ensures that the SNR operator does not wait too long for API server responses, which can be crucial in a crash scenario where quick detection and response are necessary
 
@@ -136,7 +136,7 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 `maxApiErrorThreshold` Maximum number of API errors before taking action. Setting this to `3` helps in determining when to act on persistent issues with the API server.
 
-### **Recommendations**
+### KDUMP with Node Self Remediation Operator **Recommendations**
 
 - **Monitor and Adjust Timeouts** Fine-tune the timeouts and intervals based on your environment performance and network conditions. For example, if your cluster nodes are slow to respond or network latency is high, you might need to adjust the timeouts accordingly
 
