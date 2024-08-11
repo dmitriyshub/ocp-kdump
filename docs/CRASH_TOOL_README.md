@@ -28,7 +28,7 @@ dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vm
 
 ---
 
-## Usage
+## Crash Tool Basic Usage
 
 - For help on any command below, enter `help <command>`
 
@@ -63,7 +63,7 @@ crash> struct task_struct.<field> <task_struct_address>
 
 ---
 
-## Start Crash Tool and Start Analyzing VMCORE files
+## Start Analyzing VMCORE files
 
 - When starting a crash tool, we'll get detailed system information
 
@@ -98,7 +98,7 @@ WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 
  **NOTE:** The Output With Panic Process `PID: 27435` and Panic Message `PANIC: "sysrq: SysRq : Trigger a crash"`
 
-## Start with the following commands for a high-level overview
+## Commands for a high-level overview
 
 - `bt` shows the backtrace of the crashed kernel thread, giving insight into where the crash occurred (process execution history)
 
@@ -229,7 +229,7 @@ Correlate the data from the crash tool, dmesg, and any other logs. Typical cause
 
 - For Hardware Issues Look for signs of failing hardware, such as CPU or memory errors
 
-Take Remedial Actions
+## Take Remedial Actions
 
 - If the issue is kernel-related, consider updating to a newer kernel version
 
