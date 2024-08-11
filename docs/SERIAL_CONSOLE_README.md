@@ -1,5 +1,7 @@
 # Configure Serial Console to Troubleshoot KDUMP Issues
 
+Enabling the serial console (e.g. ttyS0) for kdump troubleshooting lets you capture kernel messages and kdump output even if the graphical interface is unresponsive. It ensures that diagnostic information is accessible during a crash, which is important for remote debugging and analyzing the cause of the failure.
+
 [How does one set up a serial terminal and/or console in Red Hat Enterprise Linux?](https://access.redhat.com/articles/3166931)
 
 - Create a Butane file for Kernel Arguments and systemd service

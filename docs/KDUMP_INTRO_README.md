@@ -34,9 +34,9 @@ When you enable kdump on a system, its crucial to understand the conditions unde
 
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
-- Through the kernel command line (e.g. via a MachineConfig)
+- Through the kernel command line (e.g. via a MachineConfig) **PermanentMethod**
 
-- By manually setting the parameters at runtime through system files (e.g., using echo commands in /proc/sys/ or /sys/)
+- By manually setting the parameters at runtime through system files (e.g. using echo commands in /proc/sys/ or /sys/) **Temporary Method**
 
 There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
 
@@ -88,6 +88,12 @@ kernel.hardlockup_panic = 1
 
 ```bash
 kernel.hung_task_panic = 1
+```
+
+- Use `rpm-ostree` when configuring this parameters manually
+
+```bash
+rpm-ostree kargs --append='crashkernel=512M' --append='kernel.panic=1' --append='vm.panic_on_oom=1'
 ```
 
 - Use `kernelArguments` when configuring this parameters with a MachineConfig
@@ -181,5 +187,9 @@ By aligning these parameters and ensuring proper configuration, you can enhance 
 6. Trigger the kernel crash and wait until the node reboots and becomes in `Ready` status again
 
 7. Start the debug pod again and check if the `vmcore` files exist in the target path
+
+---
+
+[Return to main](../README.md)
 
 ---

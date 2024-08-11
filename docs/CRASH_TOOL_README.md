@@ -1,16 +1,16 @@
 # Crash Tool Guide
 
-The `crash` tool is a powerful utility for analyzing the state of a Linux system after a kernel crash, Below are some essential commands and their usage.
+The `crash` tool is a powerful utility for analyzing the state of a Linux system after a kernel crash, Below are some command examples and their usage.
 
 When `kdump` captures a system crash, it generates three key files that are crucial for post-mortem analysis:
 
-- `vmcore` is the primary memory dump file containing a snapshot of the system's RAM at the time of the crash. It includes all in-memory data, such as the kernel’s memory and process information, providing the raw data needed for in-depth analysis with tools like `crash`
+- `vmcore` is the primary memory dump file containing a snapshot of the system RAM at the time of the crash. It includes all in-memory data, such as the kernel’s memory and process information, providing the raw data needed for in-depth analysis with tools like `crash`
 
-- `vmcore-dmesg.txt` file logs the kernel message buffer leading up to the crash. It records the kernel’s log messages, helping to identify events or errors that directly preceded the crash, such as hardware faults or out-of-memory conditions
+- `vmcore-dmesg.txt` file logs the kernel message buffer leading up to the crash. It records the kernel log messages, helping to identify events or errors that directly preceded the crash, such as hardware faults or out-of-memory conditions
 
-- `kexec-dmesg.log` file details the operations performed by the secondary kdump kernel during the capture process. It is essential for troubleshooting any issues that occur during the dumping of vmcore, such as errors in writing the file to disk
+- `kexec-dmesg.log` file details the operations performed by the secondary kdump kernel during the capture process. It is important for troubleshooting any issues that occur during the dumping of vmcore, such as errors in writing the file to disk
 
-Together these files provide a comprehensive view of the system's state before, during, and after the crash, enabling thorough analysis and diagnosis.
+Together these files provide a comprehensive view of the system state before, during, and after the crash, enabling thorough analysis and diagnosis.
 
 ## Kernel File Types
 
@@ -35,6 +35,7 @@ dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vm
 - For help on any command below, enter `help <command>`
 
 ```bash
+crash> help
 crash> help bt
 crash> help log
 ```
@@ -139,7 +140,7 @@ crash> ps | grep ">"
 ...
 ```
 
-- Check the panic process using the PID given
+- Check the panic process using `ps` with the PID given
 
 ```bash
 crash> ps | grep 27435
@@ -223,7 +224,7 @@ crash> foreach files | grep "locked"
 
 ## Identify the Root Cause
 
-Correlate the data from the crash tool, dmesg, and any other logs. Typical causes might include:
+Correlate the data from the crash tool and dmesg logs. Typical causes might include:
 
 - Kernel Panics often caused by hardware failures, driver issues, or bugs in the kernel
 
@@ -233,13 +234,11 @@ Correlate the data from the crash tool, dmesg, and any other logs. Typical cause
 
 ## Take Remedial Actions
 
-- If the issue is kernel-related, consider updating to a newer kernel version
+- If the issue is kernel-related, consider upgrading to a newer OS version
 
 - Run hardware diagnostics if the crash indicates potential hardware failure
 
 - Adjust system configurations (e.g., memory limits, swap space) if the crash was related to resource exhaustion
-
-- Always ensure your system and tools are up to date, and consult additional resources if you encounter uncommon issues
 
 ---
 

@@ -1,6 +1,6 @@
 # KDUMP in OpenShift CoreOS Baremetal Nodes
 
-This repository is designed to implement kdump on OpenShift nodes. We've encountered scenarios where nodes become unresponsive, making it difficult to investigate the cause. By configuring kdump, we aim to collect crash dumps that will allow us to analyze and resolve these issues, ensuring greater stability and reliability of our infrastructure.
+This repository is focused on setting up kdump on OpenShift worker nodes. We created it to address situations where worker nodes freeze without warning, preventing us from troubleshooting the underlying cause. With kdump we can capture detailed crash dumps, providing the insights needed to diagnose and prevent these issues from recurring.
 
 ## 📖 Table of Content
 

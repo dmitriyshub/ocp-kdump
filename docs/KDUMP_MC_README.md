@@ -1,6 +1,6 @@
 # KDUMP Machineconfig Configuration
 
-- **NOTE:** Always Backup the configuration files
+**NOTE:** Always Backup the configuration files
 
 - Choose the Preffered Target Path (`local`/`ssh`) and Create Butane File
 

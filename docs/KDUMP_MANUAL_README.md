@@ -1,6 +1,6 @@
 # KDUMP Manual Configuration (Not Recommended)
 
-- **NOTE:** Always Backup the configuration files
+**NOTE:** Always Backup the configuration files
 
 - Modify `/etc/kdump.conf` and `/etc/sysconfig/kdump`
 
@@ -58,6 +58,14 @@ cat /sys/kernel/kexec_crash_loaded
 # Trigger kernel dump
 echo c > /proc/sysrq-trigger
 ```
+
+---
+
+[Local Path Examples](../examples/kdump-local-path/)
+
+---
+
+[SSH Path Examples](../examples/kdump-ssh-path/)
 
 ---
 
