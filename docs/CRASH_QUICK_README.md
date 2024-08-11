@@ -34,7 +34,9 @@ RUN yum localinstall -y /tmp/rpms/*.rpm && \
     yum clean all && \
     rm -rf /var/cache/yum
 
-# Set up the entry point to use the crash utility
+# This ENTRYPOINT take care of the vmlinux kernel version path, 
+# When we run this container image we only need to mount and pass the vmcore file 
+# Example: podman run --rm -it -v /path/to/vmcore:/vmcore:Z kdump-crash-tool:<kernel-version-tag> /vmcore
 ENTRYPOINT ["crash", /usr/lib/debug/lib/modules/<kernel.version>/vmlinux]
 ```
 

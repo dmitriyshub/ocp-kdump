@@ -16,7 +16,7 @@ Kernel crashes can be tricky to diagnose, but with the crash utility, you can ga
 
 ## Installation and Configuration
 
-- You can install crash using the package manager. For example, on a Red Hat-based system, you can use:
+- You can install crash using the package manager, on a Red Hat-based system, you can use:
 
 ```bash
 dnf install crash -y

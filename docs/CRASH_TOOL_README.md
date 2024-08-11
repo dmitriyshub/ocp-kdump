@@ -10,13 +10,13 @@ When `kdump` captures a system crash, it generates three key files that are cruc
 
 - `kexec-dmesg.log` file details the operations performed by the secondary kdump kernel during the capture process. It is essential for troubleshooting any issues that occur during the dumping of vmcore, such as errors in writing the file to disk
 
-Together, these files provide a comprehensive view of the system's state before, during, and after the crash, enabling thorough analysis and diagnosis.
+Together these files provide a comprehensive view of the system's state before, during, and after the crash, enabling thorough analysis and diagnosis.
 
 ## Kernel File Types
 
-- `vmlinux` is the uncompressed kernel code, `vmlinuz`, and `vmlinux.bin` are compressed versions for booting. `zimage` is an older compressed format, and `bzImage` is an improved version.
+`vmlinux` is the uncompressed kernel code, `vmlinuz`, and `vmlinux.bin` are compressed versions for booting. `zimage` is an older compressed format, and `bzImage` is an improved version.
 
-[Differences Between vmlinux, vmlinuz, vmlinux.bin, zimage, and bzimage](https://www.baeldung.com/linux/kernel-images)
+- [Differences Between vmlinux, vmlinuz, vmlinux.bin, zimage, and bzimage](https://www.baeldung.com/linux/kernel-images)
 
 - `vmlinuz` is a compressed file, but crash requires an uncompressed file `vmlinux`, which is compiled with `-g` option.
 Make sure your kernel is compiled with `-g` option, and then you can get an uncompressed `vmlinux` file from compressed `vmlinuz`, using the method as follows: (Not Recommended, Use it only with custom/unofficial kernels)

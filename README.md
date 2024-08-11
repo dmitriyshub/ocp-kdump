@@ -144,7 +144,7 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 - **Configure Watchdog** Make sure that the `watchdogFilePath` is correctly set and that the hardware watchdog is functioning as expected to reset unresponsive nodes
 
-- **Test Remediation Actions** Perform testing to ensure that the SNR operator can handle various crash scenarios, including those where kdump is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected.
+- **Test Remediation Actions** Perform testing to ensure that the SNR operator can handle various crash scenarios, including those where kdump is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected
 
 By aligning these parameters and ensuring proper configuration, you can enhance the effectiveness of kdump and the Node Self Remediation Operator in managing and recovering from crashes in a cluster environment.
 
