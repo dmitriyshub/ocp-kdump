@@ -1,10 +1,18 @@
 # Crash Tool Guide
 
-The crash tool is a powerful utility for analyzing the state of a Linux system after a kernel crash, Below are some essential commands and their usage.
+The `crash` tool is a powerful utility for analyzing the state of a Linux system after a kernel crash, Below are some essential commands and their usage.
 
----
+When `kdump` captures a system crash, it generates three key files that are crucial for post-mortem analysis:
 
-## Kernel Types
+- `vmcore` is the primary memory dump file containing a snapshot of the system's RAM at the time of the crash. It includes all in-memory data, such as the kernel’s memory and process information, providing the raw data needed for in-depth analysis with tools like `crash`
+
+- `vmcore-dmesg.txt` file logs the kernel message buffer leading up to the crash. It records the kernel’s log messages, helping to identify events or errors that directly preceded the crash, such as hardware faults or out-of-memory conditions
+
+- `kexec-dmesg.log` file details the operations performed by the secondary kdump kernel during the capture process. It is essential for troubleshooting any issues that occur during the dumping of vmcore, such as errors in writing the file to disk
+
+Together, these files provide a comprehensive view of the system's state before, during, and after the crash, enabling thorough analysis and diagnosis.
+
+## Kernel File Types
 
 - `vmlinux` is the uncompressed kernel code, `vmlinuz`, and `vmlinux.bin` are compressed versions for booting. `zimage` is an older compressed format, and `bzImage` is an improved version.
 
@@ -60,8 +68,6 @@ crash> struct task_struct.<field> <task_struct_address>
 - When starting a crash tool, we'll get detailed system information
 
 ```bash
-podman run --rm -it -v /path/to/vmcore:/vmcore:Z kdump-crash:4.18.0-372.73.1.el8_6 /vmcore
-...
 WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 
       KERNEL: /usr/lib/debug/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinux
@@ -90,7 +96,7 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
 WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 ```
 
-**NOTE:** The Output With Panic Process and Message `PANIC: "sysrq: SysRq : Trigger a crash"` `PID: 27435`
+ **NOTE:** The Output With Panic Process `PID: 27435` and Panic Message `PANIC: "sysrq: SysRq : Trigger a crash"`
 
 ## Start with the following commands for a high-level overview
 

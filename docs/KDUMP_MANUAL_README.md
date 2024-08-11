@@ -46,6 +46,8 @@ echo c > /proc/sysrq-trigger
 
 [Conf Files Examples](../examples/kdump-conf-files/)
 
+---
+
 [Return to main](../README.md)
 
 ---
