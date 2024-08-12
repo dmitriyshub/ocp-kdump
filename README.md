@@ -86,22 +86,22 @@ This repository is focused on setting up kdump on OpenShift nodes. We created it
 
 ## 🔗 Manual Pages
 
-**NOTE:** Always refer to your **CoreOS** tools version manual page
-
-- [kexec(8) - Linux man page](https://linux.die.net/man/8/kexec)
-
-- [makedumpfile(8) - make a small dumpfile of kdump](https://www.linux.org/docs/man5/makedumpfile.html)
-
-- [kdump.conf(5) - configuration file for kdump kernel](https://linux.die.net/man/5/kdump.conf)
+**NOTE:** The links provided below are for reference only, Always refer to the manual pages specific to your **CoreOS** version to ensure compatibility!
 
 - [kdump(5) - Configuration of kdump](https://www.unix.com/man-page/suse/5/kdump/)
 
+- [kdump.conf(5) - configuration file for kdump kernel](https://linux.die.net/man/5/kdump.conf)
+
 - [kdumpctl(8) - control interface for kdump](https://www.linux.org/docs/man8/kdumpctl.html)
+
+- [kexec(8) - Linux man page](https://linux.die.net/man/8/kexec)
 
 - [dracut - low-level tool for generating an initramfs/initrd image](https://manpages.ubuntu.com/manpages/kinetic/man8/dracut.8.html)
 
 - [dracut.cmdline(7) - dracut kernel command line options](https://www.unix.com/man-page/linux/7/dracut.cmdline/)
 
 - [dracut-module-setup.sh - Github Repository](https://github.com/jesa7955/kexec-tools-fedora/blob/master/dracut-module-setup.sh)
+
+- [makedumpfile(8) - make a small dumpfile of kdump](https://www.linux.org/docs/man5/makedumpfile.html)
 
 ---
