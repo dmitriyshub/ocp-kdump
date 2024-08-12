@@ -1,10 +1,14 @@
 # KDUMP Machineconfig Configuration
 
+This section outlines configuring kdump using MachineConfig in an OpenShift cluster environment. This method allows for centralized management of kdump settings across all nodes in the pool.
+
 **NOTE:** Always Backup the configuration files
 
-- Choose the Preffered Target Path (`local`/`ssh`) and Create Butane File
+## Choose Your Preffered Target Path `local` or `ssh` and Create Butane File
 
-- Add `makedumpfile -F` Option Only for SSH target
+- Prepare a Butane configuration file to set up the kdump service
+
+**NOTE** The `makedumpfile -F` option is required only for the `SSH` target
 
 ```yaml
 variant: openshift
@@ -64,20 +68,33 @@ systemd:
       enabled: true
 ```
 
-- Convert Butane file to `yaml` and Apply the `MachineConfig`
+## Convert the Butane file to YAML format
+
+- Convert the `Butane` file to a `YAML` configuration
 
 ```bash
 butane 99-worker-kdump.bu -o 99-worker-kdump.yaml
+```
+
+## Apply the MachineConfig
+
+- Use `oc` to apply the `MachineConfig`
+
+```bash
 oc apply -f 99-worker-kdump.yaml
 ```
 
-- Monitor the `MachineConfigPool` and wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
+## Monitor the MachineConfigPool Status to Ensure Updates are Applied
+
+- Wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
 
 ```bash
 watch oc get nodes,mcp
 ```
 
 ## Initiate Manual Kernel Crash Dump
+
+- To manually trigger a kernel dump, use the following commands
 
 ```bash
 # Check if kdump is active

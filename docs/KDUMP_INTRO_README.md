@@ -34,13 +34,13 @@ When you enable kdump on a system, its crucial to understand the conditions unde
 
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
-- Through the kernel command line (e.g. via a MachineConfig) **PermanentMethod**
+- Through the kernel command line (e.g. via a `MachineConfig`) **PermanentMethod**
 
-- By manually setting the parameters at runtime through system files (e.g. using echo commands in /proc/sys/ or /sys/) **Temporary Method**
+- By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`) **Temporary Method**
 
 There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
 
-- **System hangs due to NMI:** Occurs when a Non-Maskable Interrupt is issued, usually due to a hardware fault
+- **System hangs due to NMI:** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault
 
 ```bash
 kernel.unknown_nmi_panic = 1
@@ -48,19 +48,19 @@ kernel.panic_on_io_nmi = 1
 kernel.panic_on_unrecovered_nmi = 1
 ```
 
-- Control NMI behavior using the `nmi_watchdog` parameter
+- **Control NMI behavior** using the `nmi_watchdog`
 
 ```bash
 nmi_watchdog = 1
 ```
 
-- Configure the watchdog timeout threshold using `watchdog_thresh`
+- **Configure watchdog timeout threshold** using `watchdog_thresh`
 
 ```bash
 watchdog_thresh = 10
 ```
 
-- **Machine Check Exceptions (MCE)** indicate hardware errors and configure the system to panic on MCE events
+- **Machine Check Exceptions (MCE)** indicate hardware errors and configure the system to panic on `MCE` events
 
 ```bash
 mce = 0
@@ -72,13 +72,13 @@ mce = 0
 vm.panic_on_oom = 1
 ```
 
-- **CPU Soft Lockup event:** Occurs when a task is using the CPU for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds)
+- **CPU Soft Lockup event:** Occurs when a task is using the `CPU` for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds)
 
 ```bash
 kernel.softlockup_panic = 1
 ```
 
-- **CPU Hard Lockup event**  More severe than soft lockups, typically indicating that a CPU has stopped working entirely
+- **CPU Hard Lockup event**  More severe than soft lockups, typically indicating that a `CPU` has stopped working entirely
 
 ```bash
 kernel.hardlockup_panic = 1
@@ -89,6 +89,8 @@ kernel.hardlockup_panic = 1
 ```bash
 kernel.hung_task_panic = 1
 ```
+
+### Modify Kernel Parameters
 
 - Use `rpm-ostree` when configuring this parameters manually
 
@@ -112,29 +114,29 @@ rpm-ostree kargs --append='crashkernel=512M' --append='kernel.panic=1' --append=
 
 ### Why KDUMP Configuration Matters
 
-Properly configuring both the crash triggers and memory reservation is essential for kdump to function as intended.
+Properly configuring both the crash triggers and memory reservation is essential for `kdump` to function as intended.
 
-- By setting the appropriate parameters (e.g. kernel.panic=1, vm.panic_on_oom=1), you ensure that kdump will trigger on specific events, allowing you to capture memory dumps that are critical for diagnosing issues
+- By setting the appropriate parameters (e.g. `kernel.panic=1`, `vm.panic_on_oom=1`), you ensure that `kdump` will trigger on specific events, allowing you to capture memory dumps that are critical for diagnosing issues
 
 - Without these parameters, your system might simply reboot or remain unresponsive during critical failures, leaving you without valuable diagnostic data
 
-Enabling kdump without configuring the associated kernel parameters and memory reservation means that kdump might not activate during critical events, leading to missed opportunities for diagnostics. To ensure kdump functions effectively, it's important to:
+Enabling `kdump` without configuring the associated kernel parameters and memory reservation means that `kdump` might not activate during critical events, leading to missed opportunities for diagnostics. To ensure `kdump` functions effectively, it's important to:
 
 - Set kernel parameters like `kernel.panic`, `vm.panic_on_oom`, and others according to the events you want to capture
 
-- Configure crashkernel to reserve sufficient memory for kdump to operate
+- Configure `crashkernel` parameter to reserve sufficient memory for kdump to operate
 
-These steps help ensure that when a crash occurs, kdump can capture the necessary information to diagnose the underlying issue.
+These steps help ensure that when a crash occurs, `kdump` can capture the necessary information to diagnose the underlying issue.
 
-## In Clustered Environments
+## KDUMP in Clustered Environments
 
-Cluster environments potentially invite their own unique obstacles to vmcore collection. Some clusterware provides functionality to fence nodes via the SysRq or an NMI allows for vmcore collection upon fencing a node.
+Cluster environments potentially invite their own unique obstacles to `vmcore` collection. Some clusterware provides functionality to fence nodes via the `SysRq` or an `NMI` allows for `vmcore` collection upon fencing a node.
 
-In addition to ensuring that the cluster and kdump configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test or try to extand the fence timeout.
+In addition to ensuring that the cluster and `kdump` configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test or try to extand the fence timeout.
 
 ## KDUMP With Node Self Remediation Operator
 
-Integrating kdump with a Node Self Remediation Operator in a cluster environment involves configuring both systems to work in harmony. Here is how you can set up and adjust the parameters of the SNR operator to optimize its behavior with kdump, ensuring that the system can properly handle kernel crashes and initiate remediation processes effectively.
+Integrating `kdump` with a Node Self Remediation Operator in a cluster environment involves configuring both systems to work in harmony. Here is how you can set up and adjust the parameters of the `SNR` operator to optimize its behavior with `kdump`, ensuring that the system can properly handle kernel crashes and initiate remediation processes effectively.
 
 Node Self Remediation Operator is a component that monitors node health and performs remediation actions (like rebooting) if it detects issues such as unresponsive nodes or specific failure conditions.
 
@@ -160,7 +162,7 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 `maxApiErrorThreshold` Maximum number of API errors before taking action. Setting this to `3` helps in determining when to act on persistent issues with the API server.
 
-### KDUMP with Node Self Remediation Operator **Recommendations**
+### Node Self Remediation Operator **Recommendations**
 
 - **Monitor and Adjust Timeouts** Fine-tune the timeouts and intervals based on your environment performance and network conditions. For example, if your cluster nodes are slow to respond or network latency is high, you might need to adjust the timeouts accordingly
 
@@ -168,9 +170,9 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 - **Configure Watchdog** Make sure that the `watchdogFilePath` is correctly set and that the hardware watchdog is functioning as expected to reset unresponsive nodes
 
-- **Test Remediation Actions** Perform testing to ensure that the SNR operator can handle various crash scenarios, including those where kdump is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected
+- **Test Remediation Actions** Perform testing to ensure that the `SNR` operator can handle various crash scenarios, including those where `kdump` is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected
 
-By aligning these parameters and ensuring proper configuration, you can enhance the effectiveness of kdump and the Node Self Remediation Operator in managing and recovering from crashes in a cluster environment.
+By aligning these parameters and ensuring proper configuration, you can enhance the effectiveness of `kdump` and the Node Self Remediation Operator in managing and recovering from crashes in a cluster environment.
 
 ## Kdump Testing Summary Steps
 

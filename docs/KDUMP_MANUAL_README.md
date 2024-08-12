@@ -1,27 +1,31 @@
 # KDUMP Manual Configuration (Not Recommended)
 
-**NOTE:** Always Backup the configuration files
+This section provides guidance on manually configuring kdump for capturing crash dumps. Manual configuration is generally not recommended due to the potential errors and huge amount of nodes. Ensure you back up all configuration files before making changes. Use this guide if you need to manually adjust settings for specific scenarios.
 
-- Modify `/etc/kdump.conf` and `/etc/sysconfig/kdump`
+**NOTE:** Always Backup the configuration files!
 
-- [KDUMP Configuration Files Examples](../examples/kdump-conf-files/)
+## Modify the Configuration Files `/etc/kdump.conf` and `/etc/sysconfig/kdump`
+
+[KDUMP Configuration Files Examples](../examples/kdump-conf-files/)
+
+- Modify `/etc/kdump.conf`
 
 ```bash
-vim /etc/kdump.conf
 path /var/crash
 core_collector makedumpfile -l --message-level 7 -d 31
 default shell
 ```
 
+- Modify `/etc/sysconfig/kdump`
+
 ```bash
-vim /etc/sysconfig/kdump
 KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb"
 KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never nokaslr novmcoredd hest_disable rd.net.timeout.carrier=30"
 KEXEC_ARGS="-s"
 KDUMP_IMG="vmlinuz"
 ```
 
-- Use `rpm-ostree` to Add Kernel Parameter and Enable `kdump`
+## Configure and Enable `kdump`
 
 ```bash
 # Check and modify configuration files
@@ -36,7 +40,7 @@ kdumpctl rebuild
 kdumpctl restart
 ```
 
-- Execute `cordon` and `drain` Before Reboot the Node
+## Prepare the node for rebooting
 
 ```bash
 oc adm cordon <node-name>
@@ -47,6 +51,8 @@ systemctl reboot
 ```
 
 ## Initiate Manual Kernel Crash Dump
+
+- To manually trigger a kernel dump, use the following commands
 
 ```bash
 # Check if kdump is active
