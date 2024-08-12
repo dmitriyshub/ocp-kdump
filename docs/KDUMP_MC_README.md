@@ -1,4 +1,4 @@
-# KDUMP Machineconfig Configuration
+# KDUMP MachineConfig Configuration
 
 This section outlines configuring kdump using MachineConfig in an OpenShift cluster environment. This method allows for centralized management of kdump settings across all nodes in the pool.
 
@@ -109,11 +109,11 @@ echo c > /proc/sysrq-trigger
 
 ---
 
-[Local Path Examples](../examples/kdump-local-path/)
+[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
 
 ---
 
-[SSH Path Examples](../examples/kdump-ssh-path/)
+[Previous Page - Manual Configuration](./KDUMP_MANUAL_README.md) | [Next Page - Examples](../examples/README.md)
 
 ---
 

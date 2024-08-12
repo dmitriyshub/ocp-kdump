@@ -95,6 +95,10 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
 
 ---
 
+[Previous Page - Manual Crash Tool](./CRASH_MANUAL_README.md) | [Next Page - Crash Tool Guide](./CRASH_TOOL_README.md)
+
+---
+
 [Return to main](../README.md)
 
 ---

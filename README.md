@@ -6,7 +6,7 @@ This repository is focused on setting up kdump on OpenShift nodes. We created it
 
 - [KDUMP Introduction and Key Concepts](/docs/KDUMP_INTRO_README.md)
 
-### KDUMP Configuration and Installation
+### KDUMP Configuration, Installation and Troubleshooting
 
 - [KDUMP Manual Configuration](/docs/KDUMP_MANUAL_README.md)
 
@@ -14,17 +14,15 @@ This repository is focused on setting up kdump on OpenShift nodes. We created it
 
 - [KDUMP Examples](/examples/README.md)
 
+- [KDUMP Troubleshooting](/docs/KDUMP_TROUBLESHOOT_README.md)
+
+- [Configure Serial Console for KDUMP Issues Troubleshooting](/docs/SERIAL_CONSOLE_README.md)
+
 ### Crash Tool Configuration and Usage
 
 - [Using Crash Tool RPM to Analyze a vmcore](/docs/CRASH_MANUAL_README.md)
 
 - [Using Crash Tool Custom Container to Analyze a vmcore](/docs/CRASH_QUICK_README.md)
-
-### KDUMP and VMCORE Troubleshooting
-
-- [KDUMP Troubleshooting](/docs/KDUMP_TROUBLESHOOT_README.md)
-
-- [Configure Serial Console to Troubleshoot KDUMP Issues](/docs/SERIAL_CONSOLE_README.md)
 
 - [Crash Tool Guide](/docs/CRASH_TOOL_README.md)
 

@@ -304,6 +304,10 @@ Correlate the data from the crash tool and dmesg logs. Typical causes might incl
 
 ---
 
+[Previous Page - Quick Crash Tool](./CRASH_QUICK_README.md)
+
+---
+
 [Return to main](../README.md)
 
 ---

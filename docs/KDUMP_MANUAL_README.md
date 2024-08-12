@@ -67,11 +67,11 @@ echo c > /proc/sysrq-trigger
 
 ---
 
-[Local Path Examples](../examples/kdump-local-path/)
+[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
 
 ---
 
-[SSH Path Examples](../examples/kdump-ssh-path/)
+[Previous Page - Introduction](./KDUMP_INTRO_README.md) | [Next Page - MachineConfig Configuration](./KDUMP_MC_README.md)
 
 ---
 

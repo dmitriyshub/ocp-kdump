@@ -18,6 +18,10 @@
 
 ---
 
+[Previous Page - MachineConfig Configuration](../docs/KDUMP_MC_README.md) | [Next Page - Troubleshooting](../docs/KDUMP_TROUBLESHOOT_README.md)
+
+---
+
 [Return to main](../README.md)
 
 ---

@@ -1,4 +1,4 @@
-# Configure Serial Console to Troubleshoot KDUMP Issues
+# Configure Serial Console for KDUMP Issues Troubleshooting
 
 Enabling the serial console (e.g. `ttyS0`) for kdump troubleshooting lets you capture kernel messages and kdump output even if the graphical interface is unresponsive. It ensures that diagnostic information is accessible during a crash, which is important for remote debugging and analyzing the cause of the failure.
 
@@ -98,6 +98,10 @@ watch oc get nodes,mcp
 ---
 
 [Serial Console Configuration Example](../examples/serial-console-conf/)
+
+---
+
+[Previous Page - Troubleshooting](./KDUMP_TROUBLESHOOT_README.md) | [Next Page - Manual Crash Tool](./CRASH_MANUAL_README.md)
 
 ---
 
