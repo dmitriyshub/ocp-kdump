@@ -90,6 +90,6 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---

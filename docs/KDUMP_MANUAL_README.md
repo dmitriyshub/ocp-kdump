@@ -75,6 +75,6 @@ echo c > /proc/sysrq-trigger
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---

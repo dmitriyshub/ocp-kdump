@@ -2,13 +2,13 @@
 
 This section outlines configuring kdump using MachineConfig in an OpenShift cluster environment. This method allows for centralized management of kdump settings across all nodes in the pool.
 
-**NOTE:** Always Backup the configuration files
+**NOTE:** Always Backup the configuration files!
 
 ## Choose Your Preffered Target Path `local` or `ssh` and Create Butane File
 
 - Prepare a Butane configuration file to set up the kdump service
 
-**NOTE** The `makedumpfile -F` option is required only for the `SSH` target
+**NOTE** The `makedumpfile -F` option is required only for the `SSH` target!
 
 ```yaml
 variant: openshift
@@ -117,6 +117,6 @@ echo c > /proc/sysrq-trigger
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---

@@ -58,7 +58,7 @@ crash --osrelease /path/to/vmcore
 
 - Example command to run the container and analyze a vmcore file, this command mounts the vmcore file into the container and runs the crash utility with the necessary arguments:
 
-**NOTE:** Replace /path/to/vmcore with the actual path to the vmcore
+**NOTE:** Replace `/path/to/vmcore` with the actual path to the vmcore!
 
 ```bash
 podman run --rm -it -v /path/to/vmcore:/vmcore:Z kdump-crash-tool:4.18.0-372.73.1.el8_6 /vmcore
@@ -99,6 +99,6 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---

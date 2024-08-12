@@ -138,6 +138,6 @@ ls -la squashfs-root/
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---

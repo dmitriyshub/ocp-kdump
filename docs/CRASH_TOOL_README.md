@@ -221,17 +221,17 @@ The first step in diagnosing a kernel crash is to examine the backtrace, which s
 bt -a
 ```
 
-Review the backtrace for any functions or modules that might have caused the crash. Pay attention to the final few function calls before the panic, as these often provide clues about the root cause.
+- Review the backtrace for any functions or modules that might have caused the crash. Pay attention to the final few function calls before the panic, as these often provide clues about the root cause
 
 ### Check the logs for OOM killer activity
 
-Out-of-memory (OOM) situations can trigger the kernel to kill processes to reclaim memory, which might lead to instability or crashes
+- Out-of-memory (`OOM`) situations can trigger the kernel to kill processes to reclaim memory, which might lead to instability or crashes
 
 ```bash
 crash> log | grep -i "oom"
 ```
 
-Identify any logs related to the OOM killer, If found, note which processes were terminated and consider whether these OOM events correlate with the timing of the crash.
+Identify any logs related to the `OOM` killer, If found note which processes were terminated and consider whether these `OOM` events correlate with the timing of the crash.
 
 ### Check Networking Issues
 
@@ -300,7 +300,7 @@ Correlate the data from the crash tool and dmesg logs. Typical causes might incl
 
 - Run hardware diagnostics if the crash indicates potential hardware failure
 
-- Adjust system configurations (e.g., memory limits, swap space) if the crash was related to resource exhaustion
+- Adjust system configurations (e.g. memory limits, swap space) if the crash was related to resource exhaustion
 
 ---
 
@@ -308,6 +308,6 @@ Correlate the data from the crash tool and dmesg logs. Typical causes might incl
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---

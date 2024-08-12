@@ -196,6 +196,6 @@ By aligning these parameters and ensuring proper configuration, you can enhance 
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---

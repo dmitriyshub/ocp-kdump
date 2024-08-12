@@ -105,6 +105,6 @@ watch oc get nodes,mcp
 
 ---
 
-[Return to main](../README.md)
+[Return to Main Page](../README.md)
 
 ---
