@@ -28,8 +28,6 @@ This repository is focused on setting up kdump on OpenShift nodes. We created it
 
 - [Crash Tool Guide](/docs/CRASH_TOOL_README.md)
 
----
-
 ## 🔗 Documentation and Articles
 
 ### Official Docs
@@ -48,13 +46,11 @@ This repository is focused on setting up kdump on OpenShift nodes. We created it
 
 ### Unofficial Blogs
 
-- [A vmcore for your system may be smaller than you think!](https://blogs.oracle.com/linux/post/vmcore-smaller-than-you-think) **<-- Recommended** 
+- [A vmcore for your system may be smaller than you think!](https://blogs.oracle.com/linux/post/vmcore-smaller-than-you-think) **<-- Recommended**
 
 - [Untestand the Machine Config Pool (OpenShift Container Platform 4.x)](https://kamsjec.medium.com/machine-config-pool-openshift-container-platform-4-x-c515e7a093fb)
 
 - [White Paper: Crash Utility by David Anderson](https://crash-utility.github.io/crash_whitepaper.html) **<-- Recommended**
-
----
 
 ## 🔗 Issues and Solutions
 
@@ -87,8 +83,6 @@ This repository is focused on setting up kdump on OpenShift nodes. We created it
 - [Kdump failes with "kdump: get_host_ip exited with non-zero status!"](https://access.redhat.com/solutions/5927171)
 
 - [kdump failure when network requires multiple nics to reach dump target](https://access.redhat.com/solutions/3744271)
-
----
 
 ## 🔗 Manual Pages
 
