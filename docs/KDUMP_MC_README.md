@@ -8,6 +8,8 @@ This section outlines configuring kdump using MachineConfig in an OpenShift clus
 
 - Prepare a Butane configuration file to set up the kdump service
 
+[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
+
 **NOTE** The `makedumpfile -F` option is required only for the `SSH` target!
 
 ```yaml
@@ -109,14 +111,7 @@ echo c > /proc/sysrq-trigger
 
 ---
 
-[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
-
----
-
-[Previous Page - Manual Configuration](./KDUMP_MANUAL_README.md) | [Next Page - Examples](../examples/README.md)
-
----
-
-[Return to Main Page](../README.md)
+| [Previous Page - Manual Configuration](./KDUMP_MANUAL_README.md) | [Next Page - Examples](../examples/README.md) | [Return to Main Page](../README.md) |
+|------------------------------------------------------------------|-----------------------------------------------|-------------------------------------|
 
 ---

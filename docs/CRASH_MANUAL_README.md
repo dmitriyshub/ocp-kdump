@@ -86,10 +86,7 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
 
 ---
 
-[Previous Page - Configure Serial Console](./SERIAL_CONSOLE_README.md) | [Next Page - Quick Crash Tool](./CRASH_QUICK_README.md)
-
----
-
-[Return to Main Page](../README.md)
+| [Previous Page - Configure Serial Console](./SERIAL_CONSOLE_README.md) | [Next Page - Quick Crash Tool](./CRASH_QUICK_README.md) | [Return to Main Page](../README.md) |
+|------------------------------------------------------------------------|---------------------------------------------------------|-------------------------------------|
 
 ---

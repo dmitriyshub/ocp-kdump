@@ -134,10 +134,7 @@ ls -la squashfs-root/
 
 ---
 
-[Previous Page - Examples](../examples/README.md) | [Next Page - Configure Serial Console](./SERIAL_CONSOLE_README.md)
-
----
-
-[Return to Main Page](../README.md)
+| [Previous Page - Examples](../examples/README.md) | [Next Page - Configure Serial Console](./SERIAL_CONSOLE_README.md) | [Return to Main Page](../README.md) |
+|---------------------------------------------------|--------------------------------------------------------------------|-------------------------------------|
 
 ---

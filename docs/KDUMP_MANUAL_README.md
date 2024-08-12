@@ -6,7 +6,8 @@ This section provides guidance on manually configuring kdump for capturing crash
 
 ## Modify the Configuration Files `/etc/kdump.conf` and `/etc/sysconfig/kdump`
 
-[KDUMP Configuration Files Examples](../examples/kdump-conf-files/)
+| [KDUMP Configuration Files Examples](../examples/kdump-conf-files/) | [Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/) |
+|---------------------------------------------------------------------|------------------------------------------------------|--------------------------------------------------|
 
 - Modify `/etc/kdump.conf`
 
@@ -67,14 +68,7 @@ echo c > /proc/sysrq-trigger
 
 ---
 
-[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
-
----
-
-[Previous Page - Introduction](./KDUMP_INTRO_README.md) | [Next Page - MachineConfig Configuration](./KDUMP_MC_README.md)
-
----
-
-[Return to Main Page](../README.md)
+| [Previous Page - Introduction](./KDUMP_INTRO_README.md) | [Next Page - MachineConfig Configuration](./KDUMP_MC_README.md) | [Return to Main Page](../README.md) |
+|---------------------------------------------------------|-----------------------------------------------------------------|-------------------------------------|
 
 ---

@@ -18,10 +18,5 @@
 
 ---
 
-[Previous Page - MachineConfig Configuration](../docs/KDUMP_MC_README.md) | [Next Page - Troubleshooting](../docs/KDUMP_TROUBLESHOOT_README.md)
-
----
-
-[Return to Main Page](../README.md)
-
----
+| [Previous Page - MachineConfig Configuration](../docs/KDUMP_MC_README.md) | [Next Page - Manual Crash Tool](./CRASH_MANUAL_README.md) | [Return to Main Page](../README.md) |
+|---------------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------|

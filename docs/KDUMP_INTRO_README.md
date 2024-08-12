@@ -192,10 +192,7 @@ By aligning these parameters and ensuring proper configuration, you can enhance 
 
 ---
 
-[Next Page - Manual Configuration](./KDUMP_MANUAL_README.md)
-
----
-
-[Return to Main Page](../README.md)
+| [Next Page - Manual Configuration](./KDUMP_MANUAL_README.md) | [Return to Main Page](../README.md) |
+|--------------------------------------------------------------|-------------------------------------|
 
 ---

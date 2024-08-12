@@ -4,6 +4,8 @@ Enabling the serial console (e.g. `ttyS0`) for kdump troubleshooting lets you ca
 
 [How does one set up a serial terminal and/or console in Red Hat Enterprise Linux?](https://access.redhat.com/articles/3166931)
 
+[Serial Console Configuration Example](../examples/serial-console-conf/)
+
 ## Create a Butane File
 
 - Prepare a Butane configuration file to set up the serial console
@@ -97,11 +99,7 @@ watch oc get nodes,mcp
 
 ---
 
-[Serial Console Configuration Example](../examples/serial-console-conf/)
-
----
-
 | [Previous Page - Troubleshooting](./KDUMP_TROUBLESHOOT_README.md) | [Next Page - Manual Crash Tool](./CRASH_MANUAL_README.md) | [Return to Main Page](../README.md) |
-|-------------------------------------------------------------------|------------------------------------------------------------|------------------------------------|
+|-------------------------------------------------------------------|-----------------------------------------------------------|-------------------------------------|
 
 ---

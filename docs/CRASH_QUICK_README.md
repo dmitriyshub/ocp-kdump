@@ -23,6 +23,8 @@ ls -l rpms/
 
 - Create the `Containerfile` and build the image
 
+[Containerfile Example](../examples/crash-tool-image/)
+
 ```docker
 FROM registry.url/ubi8/ubi
 
@@ -87,18 +89,11 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
 
 ---
 
-[Containerfile Example](../examples/crash-tool-image/)
-
----
-
 [Crash Tool Guide](./CRASH_MANUAL_README.md)
 
 ---
 
-[Previous Page - Manual Crash Tool](./CRASH_MANUAL_README.md) | [Next Page - Crash Tool Guide](./CRASH_TOOL_README.md)
-
----
-
-[Return to Main Page](../README.md)
+| [Previous Page - Manual Crash Tool](./CRASH_MANUAL_README.md) | [Next Page - Crash Tool Guide](./CRASH_TOOL_README.md) | [Return to Main Page](../README.md) |
+|---------------------------------------------------------------|--------------------------------------------------------|-------------------------------------|
 
 ---
