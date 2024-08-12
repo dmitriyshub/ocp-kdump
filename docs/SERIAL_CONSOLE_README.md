@@ -101,10 +101,7 @@ watch oc get nodes,mcp
 
 ---
 
-[Previous Page - Troubleshooting](./KDUMP_TROUBLESHOOT_README.md) | [Next Page - Manual Crash Tool](./CRASH_MANUAL_README.md)
-
----
-
-[Return to Main Page](../README.md)
+| [Previous Page - Troubleshooting](./KDUMP_TROUBLESHOOT_README.md) | [Next Page - Manual Crash Tool](./CRASH_MANUAL_README.md) | [Return to Main Page](../README.md) |
+|-------------------------------------------------------------------|------------------------------------------------------------|------------------------------------|
 
 ---
