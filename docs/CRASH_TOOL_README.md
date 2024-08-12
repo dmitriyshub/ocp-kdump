@@ -75,22 +75,22 @@ WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 
       KERNEL: /usr/lib/debug/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinux
     DUMPFILE: /vmcore  [PARTIAL DUMP]
-        CPUS: 80
+        CPUS: 80 # <<- Total CPU
         DATE: Sun Jun 23 10:45:14 UTC 2024
       UPTIME: 00:16:20
 LOAD AVERAGE: 0.17, 0.36, 0.49
-       TASKS: 2220
+       TASKS: 2220 # <<- The total number of processes running on the system at the time of the crash
     NODENAME: node-name.domain.name
-     RELEASE: 4.18.0-372.73.1.el8_6.x86_64 # Kernel Version
-     VERSION: #1 SMP Fri Sep 8 13:16:27 EDT 2023
+     RELEASE: 4.18.0-372.73.1.el8_6.x86_64 # <<- Kernel Version
+     VERSION: #1 SMP Fri Sep 8 13:16:27 EDT 2023 <<- (#1=version, SMP=multiprocess, realese/comiple date)
      MACHINE: x86_64  (2400 Mhz)
-      MEMORY: 766.7 GB
-       PANIC: "sysrq: SysRq : Trigger a crash" # <<- Panic Process 
+      MEMORY: 766.7 GB # <<- Total RAM
+       PANIC: "sysrq: SysRq : Trigger a crash" # <<- Panic Process Message
          PID: 27435 # <<- Panic Process PID
-     COMMAND: "bash"
-        TASK: ffff9f4e8e8f0000  [THREAD_INFO: ffff9f4e8e8f0000]
-         CPU: 14
-       STATE: TASK_RUNNING (SYSRQ)
+     COMMAND: "bash" # <<- Panic Process Command that caused the panic
+        TASK: ffff9f4e8e8f0000  [THREAD_INFO: ffff9f4e8e8f0000] # The memory address of the task structure
+         CPU: 14 # <<- Panic occurred on CPU number 14
+       STATE: TASK_RUNNING (SYSRQ) # <<- The state of the process when the panic occurred
 ```
 
 - You may see warnings like `kernel relocated`, This indicates that the kernel image was relocated in memory, and symbols were patched accordingly
@@ -99,15 +99,18 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
 WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 ```
 
- **NOTE:** The Output With Panic Process `PID: 27435` and Panic Message `PANIC: "sysrq: SysRq : Trigger a crash"`
+ **NOTE:** The Output With Panic Process `PID: 27435`, Panic Message `PANIC: "sysrq: SysRq : Trigger a crash"` and `COMMAND: "bash"` indicates which process was causing the kernel dump crash!
 
 ## Commands for a high-level overview
 
-- `bt` shows the backtrace of the crashed kernel thread, giving insight into where the crash occurred (process execution history)
+### `bt` shows the backtrace of the crashed kernel thread giving insight into where the crash occurred (process execution history)
+
+This backtrace shows the sequence of function calls leading to a kernel panic.
+The output shows the series of function calls that were active in the kernel when the crash occurred. Each line represents a frame in the stack, with the most recent function call at the top.
 
 ```bash
 crash> bt
-PID: 27435  TASK: ffff9f4e8e8f0000  CPU: 14  COMMAND: "bash"
+PID: 27435  TASK: ffff9f4e8e8f0000  CPU: 14  COMMAND: "bash" #
  #0 [ffffafcfb0de7cd8] machine_kexec at ffffffffa626822e
  #1 [ffffafcfb0de7d30] __crash_kexec at ffffffffa63af3ba
  #2 [ffffafcfb0de7df0] panic at ffffffffa62f1d9f
@@ -119,7 +122,7 @@ PID: 27435  TASK: ffff9f4e8e8f0000  CPU: 14  COMMAND: "bash"
  #8 [ffffafcfb0de7f00] ksys_write at ffffffffa655470f
  #9 [ffffafcfb0de7f38] do_syscall_64 at ffffffffa62043ab
 #10 [ffffafcfb0de7f50] entry_SYSCALL_64_after_hwframe at ffffffffa6c000a9
-    RIP: 00007f768c0275a8  RSP: 00007fffd470ad28  RFLAGS: 00000246
+    RIP: 00007f768c0275a8  RSP: 00007fffd470ad28  RFLAGS: 00000246 
     RAX: ffffffffffffffda  RBX: 0000000000000002  RCX: 00007f768c0275a8
     RDX: 0000000000000002  RSI: 000055898f2923b0  RDI: 0000000000000001
     RBP: 000055898f2923b0   R8: 000000000000000a   R9: 00007f768c087800
@@ -128,7 +131,17 @@ PID: 27435  TASK: ffff9f4e8e8f0000  CPU: 14  COMMAND: "bash"
     ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
 ```
 
-- `ps` Displays information about processes running at the time of the crash. Look for processes in an unusual state (e.g., D state).
+#### `bt` Output Explained
+
+- `#0` The first frame in the backtrace, indicating the function that was executing when the panic occurred
+
+- [ffffafcfb0de7cd8]: The address of the stack frame
+
+- `machine_kexec` The name of the function. `machine_kexec` is used to shut down the current kernel and start a new one (often used during a kexec reboot or crash dump)
+
+- `fffffffa626822e` The address of the machine_kexec function in the kernel's virtual memory
+
+### `ps` Displays information about processes running at the time of the crash. Look for processes in an unusual state (e.g. D state)
 
 ```bash
 ps | grep ">"
@@ -136,7 +149,6 @@ crash> ps | grep ">"
 >     0      0   0  ffffffffa7a18840  RU   0.0       0      0  [swapper/0]
 >     0      0   1  ffff9f4e8d108000  RU   0.0       0      0  [swapper/1]
 >     0      0   2  ffff9f4e8d10c000  RU   0.0       0      0  [swapper/2]
-...
 ...
 ```
 
@@ -147,17 +159,38 @@ crash> ps | grep 27435
 > 27435  23470  14  ffff9f4e8e8f0000  RU   0.0   24904   5312  bash
 ```
 
-- `log` Retrieves the kernel log leading up to the crash. This can provide clues about what caused the system to crash.
+#### `ps` Output Explained
+
+- `>` symbol indicates that these processes are currently running on their respective CPUs
+
+- `27435` Process ID (PID) of the process, The PID uniquely identifies this process within the system
+
+- `23470` Parent Process ID (PPID), indicating the PID of the parent process that started this process
+
+- `14` Indicates the CPU on which each process is running, 14 for CPU 14
+
+- `ffff9f4e8e8f0000` The task structure address in memory, The task structure contains all the information about this process
+
+- `RU` stands for Running, it indicates that these processes are currently in the TASK_RUNNING state
+
+- `0.0` The CPU usage or percentage of CPU time used by the process, which is 0.0 in this case
+
+- `14904` The virtual memory size of the process in kilobytes, This value (24904 KB) represents the total amount of virtual memory allocated to the process
+
+- `5312` The resident set size, or the portion of memory occupied by the process in RAM, measured in kilobytes, This process is using 5312 KB of physical memory
+
+- `bash` The command or name of the process
+
+### `log` Retrieves the kernel log leading up to the crash. This can provide clues about what caused the system to crash
 
 ```bash
 crash> log
 [    0.000000] microcode: microcode updated early to revision 0x2007006, date = 2023-03-06
 [    0.000000] Linux version 4.18.0-372.73.1.el8_6.x86_64 (mockbuild@x86-vm-07.build.eng.bos.redhat.com) (gcc version 8.5.0 20210514 (Red Hat 8.5.0-10) (GCC)) #1 SMP Fri Sep 8 13:16:27 EDT 2023
 ...
-...
 ```
 
-- Check the mount points
+### `mount` shows the mount points
 
 ```bash
 crash> mount
@@ -166,8 +199,19 @@ ffff9f4e8d056400 ffff9f4e80014800 rootfs none      /
 ffff9f6b04ff6700 ffff9f4f30843800 sysfs  sysfs     /ostree/deploy/rhcos/deploy/ed42540ab2e04a4ac789246a03ee3a742f987d716a69fa910d6d52fc76f489c5.30/sys
 ffff9f6b04ff6280 ffff9fadcc8da000 proc   proc      /ostree/deploy/rhcos/deploy/ed42540ab2e04a4ac789246a03ee3a742f987d716a69fa910d6d52fc76f489c5.30/proc
 ...
-...
 ```
+
+#### `mount` Output Explained
+
+- `MOUNT` This field shows the memory address of the mount structure in the kernel. This structure contains information about the mounted filesystem
+
+- `SUPERBLK` The memory address of the superblock structure. The superblock contains metadata about the filesystem, like its size, status, and other information
+
+- `TYPE` The type of filesystem mounted. This could be ext4, xfs, sysfs, proc, etc., depending on the specific filesystem
+
+- `DEVNAME` The device name associated with the mount. This could be a physical device (like /dev/sda1) or a virtual device (like none for certain special filesystems)
+
+- `DIRNAME` The directory on which the filesystem is mounted. This is the path where the filesystem is accessible.
 
 ## Investigate Kernel Panics
 
