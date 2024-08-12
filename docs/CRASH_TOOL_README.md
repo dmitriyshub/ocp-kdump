@@ -28,8 +28,6 @@ od -t x1 -A d /host/usr/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinuz | grep 
 dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vmlinux
 ```
 
----
-
 ## Crash Tool Basic Usage
 
 - For help on any command below, enter `help <command>`
@@ -135,7 +133,7 @@ PID: 27435  TASK: ffff9f4e8e8f0000  CPU: 14  COMMAND: "bash" #
 
 - `#0` The first frame in the backtrace, indicating the function that was executing when the panic occurred
 
-- [ffffafcfb0de7cd8]: The address of the stack frame
+- `[ffffafcfb0de7cd8]` The address of the stack frame
 
 - `machine_kexec` The name of the function. `machine_kexec` is used to shut down the current kernel and start a new one (often used during a kexec reboot or crash dump)
 
@@ -175,7 +173,7 @@ crash> ps | grep 27435
 
 - `0.0` The CPU usage or percentage of CPU time used by the process, which is 0.0 in this case
 
-- `14904` The virtual memory size of the process in kilobytes, This value (24904 KB) represents the total amount of virtual memory allocated to the process
+- `24904` The virtual memory size of the process in kilobytes, This value (24904 KB) represents the total amount of virtual memory allocated to the process
 
 - `5312` The resident set size, or the portion of memory occupied by the process in RAM, measured in kilobytes, This process is using 5312 KB of physical memory
 
@@ -215,19 +213,29 @@ ffff9f6b04ff6280 ffff9fadcc8da000 proc   proc      /ostree/deploy/rhcos/deploy/e
 
 ## Investigate Kernel Panics
 
-- If the backtrace shows a kernel panic, investigate the cause:
+The first step in diagnosing a kernel crash is to examine the backtrace, which shows the sequence of function calls leading up to the crash. This is crucial for pinpointing the exact location in the kernel code where the panic occurred.
+
+### If the backtrace shows a kernel panic, investigate the cause
 
 ```bash
 bt -a
 ```
 
-- Check the logs for OOM killer activity:
+Review the backtrace for any functions or modules that might have caused the crash. Pay attention to the final few function calls before the panic, as these often provide clues about the root cause.
+
+### Check the logs for OOM killer activity
+
+Out-of-memory (OOM) situations can trigger the kernel to kill processes to reclaim memory, which might lead to instability or crashes
 
 ```bash
 crash> log | grep -i "oom"
 ```
 
-- Check Networking Issues
+Identify any logs related to the OOM killer, If found, note which processes were terminated and consider whether these OOM events correlate with the timing of the crash.
+
+### Check Networking Issues
+
+Network interface problems can contribute to kernel crashes, especially if they cause critical system services to fail.
 
 ```bash
 crash> net
@@ -236,10 +244,13 @@ ffff9fadcda2d000  lo     127.0.0.1
 ffff9f4f626ec000  ens5f0
 ffff9f4fc1b5c000  ens5f1
 ...
-...
 ```
 
-- `kmem` gives you an overview of memory usage, including free/used memory and slab information
+Check the list of network devices and their IP addresses, Look for any interfaces that are down or have unusual configurations, Also note any network-related logs.
+
+### `kmem` gives you an overview of memory usage, including free/used memory and slab information
+
+Memory pressure or mismanagement can often lead to kernel crashes.
 
 ```bash
 crash> kmem -i
@@ -252,15 +263,22 @@ crash> kmem -i
        CACHED  2155325       8.2 GB    1% of TOTAL MEM
          SLAB   110027     429.8 MB    0% of TOTAL MEM
 ...
-...
 ```
 
-- Investigate open files and any potential lockups
+### Investigate open files and any potential lockups
+
+File system locks or an huge number of open files can lead to system hangs or lockups, contributing to instability.
 
 ```bash
 crash> files
 crash> foreach files | grep "locked"
 ```
+
+Look for any files that are locked or processes with a large number of open files. This could indicate deadlocks, resource contention, or file system issues that contributed to the crash.
+
+### To gain additional context around the system's state leading up to the crash, review the dmesg logs saved by kdump
+
+The kdump mechanism captures critical system information at the time of the crash. Reviewing these logs provides additional context about the system's state and the kdump process itself.
 
 - The `vmcore-dmesg.txt` file saved by kdump can provide system state context
 
