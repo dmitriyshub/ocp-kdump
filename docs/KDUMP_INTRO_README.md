@@ -36,13 +36,13 @@ When you enable kdump on a system, its important to understand the conditions un
 
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
-- **PermanentMethod:** Through the kernel command line (e.g. via a `MachineConfig`)
+1. **PermanentMethod:** Through the kernel command line (e.g. via a `MachineConfig`)
 
-- **Temporary Method:** By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`)
+2. **Temporary Method:** By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`)
 
 There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
 
-- **System hangs due to NMI** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault
+- **System hangs due to NMI** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault:
 
 ```bash
 kernel.unknown_nmi_panic = 1
@@ -50,57 +50,61 @@ kernel.panic_on_io_nmi = 1
 kernel.panic_on_unrecovered_nmi = 1
 ```
 
-- **Control NMI behavior** using the `nmi_watchdog`
+- **Control NMI behavior** using the `nmi_watchdog`:
 
 ```bash
 nmi_watchdog = 1
 ```
 
-- **Configure watchdog timeout threshold** using `watchdog_thresh`
+- **Configure watchdog timeout threshold** using `watchdog_thresh`:
 
 ```bash
 watchdog_thresh = 10
 ```
 
-- **Machine Check Exceptions (MCE)** indicate hardware errors and configure the system to panic on `MCE` events
+- **Machine Check Exceptions (MCE)** indicate hardware errors and configure the system to panic on `MCE` events:
 
 ```bash
 mce = 0
 ```
 
-- **Out of memory (OOM) Kill event** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory)
+- **Out of memory (OOM) Kill event** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory):
 
 ```bash
 vm.panic_on_oom = 1
 ```
 
-- **CPU Soft Lockup event** Occurs when a task is using the `CPU` for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds)
+- **CPU Soft Lockup event** Occurs when a task is using the `CPU` for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds):
 
 ```bash
 kernel.softlockup_panic = 1
 ```
 
-- **CPU Hard Lockup event**  More severe than soft lockups, typically indicating that a `CPU` has stopped working entirely
+- **CPU Hard Lockup event**  More severe than soft lockups, typically indicating that a `CPU` has stopped working entirely:
 
 ```bash
 kernel.hardlockup_panic = 1
 ```
 
-- **Hung / Blocked Task event** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds)
+- **Hung / Blocked Task event** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds):
 
 ```bash
 kernel.hung_task_panic = 1
 ```
 
-### Modify Kernel Parameters
+### Adjust Kernel Parameters
+  
+#### Temporary Method
 
-- Use `rpm-ostree` when configuring this parameters manually
+- Use `rpm-ostree` when configuring this parameters manually:
 
 ```bash
 rpm-ostree kargs --append='crashkernel=512M' --append='kernel.panic=1' --append='vm.panic_on_oom=1'
 ```
 
-- Use `kernelArguments` when configuring this parameters with a MachineConfig
+#### Permanent Method
+
+- Use `kernelArguments` when configuring this parameters with a MachineConfig:
 
 ```yaml
   kernelArguments:
@@ -135,7 +139,7 @@ Cluster environments potentially invite their own unique obstacles to `vmcore` c
 
 In addition to ensuring that the cluster and `kdump` configuration is sound, if a system encounters a kernel panic there is the possibility that it can be fenced and rebooted by the cluster before finishing dumping the vmcore. If this is suspected in a cluster environment it may be a good idea to remove the node from the cluster and reproduce the issue as a test or try to extand the fence timeout.
 
-## KDUMP With Node Self Remediation Operator
+### KDUMP With Node Self Remediation Operator
 
 Integrating `kdump` with a Node Self Remediation Operator in a cluster environment involves configuring both systems to work in harmony. Here is how you can set up and adjust the parameters of the `SNR` operator to optimize its behavior with `kdump`, ensuring that the system can properly handle kernel crashes and initiate remediation processes effectively.
 
@@ -143,25 +147,25 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 ### Node Self Remediation Configuration **Key Parameters**
 
-`apiServerTimeout` Defines the timeout for communication with the API server. Setting this to `5s` ensures that the SNR operator does not wait too long for API server responses, which can be crucial in a crash scenario where quick detection and response are necessary
+- `apiServerTimeout` Defines the timeout for communication with the API server. Setting this to `5s` ensures that the SNR operator does not wait too long for API server responses, which can be crucial in a crash scenario where quick detection and response are necessary
 
-`peerApiServerTimeout` Similar to `apiServerTimeout`, this sets the timeout for communication with peer nodes. A `5s` timeout helps ensure that the operator detects issues promptly when interacting with other nodes
+- `peerApiServerTimeout` Similar to `apiServerTimeout`, this sets the timeout for communication with peer nodes. A `5s` timeout helps ensure that the operator detects issues promptly when interacting with other nodes
 
-`isSoftwareRebootEnabled` When set to true, this allows the SNR operator to initiate a software reboot if necessary. This is important for kdump as it ensures that the system can reboot cleanly and attempt to capture a dump if a crash occurs
+- `isSoftwareRebootEnabled` When set to true, this allows the SNR operator to initiate a software reboot if necessary. This is important for kdump as it ensures that the system can reboot cleanly and attempt to capture a dump if a crash occurs
 
-`watchdogFilePath` Points to the watchdog device (e.g. `/dev/watchdog`). This device is used for hardware watchdog functions, which can help reset the system in case of a hang or severe issue. Ensure that kdump is properly configured to work with your watchdog device
+- `watchdogFilePath` Points to the watchdog device (e.g. `/dev/watchdog`). This device is used for hardware watchdog functions, which can help reset the system in case of a hang or severe issue. Ensure that kdump is properly configured to work with your watchdog device
 
-`peerDialTimeout` Sets the timeout for dialing peers. A `5s` timeout helps ensure that peer communication issues are detected quickly
+- `peerDialTimeout` Sets the timeout for dialing peers. A `5s` timeout helps ensure that peer communication issues are detected quickly
 
-`peerUpdateInterval` Defines how often the operator updates the status of peers. Setting this to `15m` helps balance between frequent checks and resource usage
+- `peerUpdateInterval` Defines how often the operator updates the status of peers. Setting this to `15m` helps balance between frequent checks and resource usage
 
-`apiCheckInterval` Sets the interval at which the SNR operator checks the API server’s health. A `15s` interval is reasonable for detecting issues without overwhelming the system with checks
+- `apiCheckInterval` Sets the interval at which the SNR operator checks the API server’s health. A `15s` interval is reasonable for detecting issues without overwhelming the system with checks
 
-`peerRequestTimeout` Timeout for peer requests. A `5s` timeout ensures timely detection of communication problems with peers.
+- `peerRequestTimeout` Timeout for peer requests. A `5s` timeout ensures timely detection of communication problems with peers.
 
-`safeTimeToAssumeNodeRebootedSeconds` Time to wait before assuming a node is rebooted. A `180s` setting provides a buffer to handle scenarios where the node may be recovering or performing tasks post-crash
+- `safeTimeToAssumeNodeRebootedSeconds` Time to wait before assuming a node is rebooted. A `180s` setting provides a buffer to handle scenarios where the node may be recovering or performing tasks post-crash
 
-`maxApiErrorThreshold` Maximum number of API errors before taking action. Setting this to `3` helps in determining when to act on persistent issues with the API server.
+- `maxApiErrorThreshold` Maximum number of API errors before taking action. Setting this to `3` helps in determining when to act on persistent issues with the API server.
 
 ### Node Self Remediation Operator **Recommendations**
 
