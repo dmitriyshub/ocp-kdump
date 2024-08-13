@@ -44,7 +44,7 @@ Applying kernel parameters to control kdump behavior can be done in two primary 
 
 ### Kernel Parameters Overview
 
-There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
+There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via kernel tunable parameters, you can refer to the most commonly used below
 
 **System hangs due to NMI** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault:
 
