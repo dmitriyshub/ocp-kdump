@@ -30,7 +30,9 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 
 ## Controlling which events trigger a Kernel Panic
 
-When you enable kdump on a system, its crucial to understand the conditions under which a crash dump will be triggered. By default, kdump doesn’t automatically trigger on every possible failure or crash scenario. it relies on specific kernel parameters to determine when to activate and capture a dump.
+When you enable kdump on a system, its important to understand the conditions under which a crash dump will be triggered. By default, `kdump` doesnt automatically trigger on every possible failure or crash scenario. it relies on specific kernel parameters to determine when to activate and capture a dump.
+
+**NOTE** Typically on `CoreOS` and similar systems, `kdump` is configured to automatically capture a crash dump when a kernel panic occurs without requiring manual configuration of specific events but its important to understand them.
 
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
@@ -104,7 +106,6 @@ rpm-ostree kargs --append='crashkernel=512M' --append='kernel.panic=1' --append=
   kernelArguments:
     - "crashkernel=512M"
     - "vm.panic_on_oom=1"
-    - "kernel.panic=10"
     - "kernel.softlockup_panic=1"
     - "kernel.hung_task_panic=1"
     - "nmi_watchdog=1"
@@ -122,7 +123,7 @@ Properly configuring both the crash triggers and memory reservation is essential
 
 Enabling `kdump` without configuring the associated kernel parameters and memory reservation means that `kdump` might not activate during critical events, leading to missed opportunities for diagnostics. To ensure `kdump` functions effectively, it's important to:
 
-- Set kernel parameters like `kernel.panic`, `vm.panic_on_oom`, and others according to the events you want to capture
+- Set kernel parameters like `kernel.softlockup_panic`, `vm.panic_on_oom`, and others according to the events you want to capture
 
 - Configure `crashkernel` parameter to reserve sufficient memory for kdump to operate
 
@@ -176,7 +177,7 @@ By aligning these parameters and ensuring proper configuration, you can enhance 
 
 ## Kdump Testing Summary Steps
 
-1. Test the `kdump` in rhel host and ensure that everything is working correctly and the `kdump` generates the vmcore files in the target path successfully (Optionl)
+1. Test the `kdump` in rhel host and ensure that everything is working correctly and the `kdump` generates the vmcore files in the target path successfully (Optional)
 
 2. Configure the `machineconfig` yaml file with all the necessary configuration of `kdump` systemd unit, `kdump` configuration files, and memory reservation `crashkernel=value` parameter
 
