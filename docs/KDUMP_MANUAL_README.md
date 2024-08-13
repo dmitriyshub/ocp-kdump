@@ -4,12 +4,9 @@ This section provides guidance on manually configuring kdump for capturing crash
 
 **NOTE:** Always Backup the configuration files!
 
-## Modify the Configuration Files `/etc/kdump.conf` and `/etc/sysconfig/kdump`
+## Prepare the Configuration Files
 
-| [KDUMP Configuration Files Examples](../examples/kdump-conf-files/) | [Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/) |
-|---------------------------------------------------------------------|------------------------------------------------------|--------------------------------------------------|
-
-- Modify `/etc/kdump.conf`
+Modify `/etc/kdump.conf`:
 
 ```bash
 path /var/crash
@@ -17,7 +14,7 @@ core_collector makedumpfile -l --message-level 7 -d 31
 default shell
 ```
 
-- Modify `/etc/sysconfig/kdump`
+Modify `/etc/sysconfig/kdump`:
 
 ```bash
 KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb"
@@ -26,22 +23,28 @@ KEXEC_ARGS="-s"
 KDUMP_IMG="vmlinuz"
 ```
 
-## Configure and Enable `kdump`
+| [Configuration Files Examples](../examples/kdump-conf-files/) | [Local Target Examples](../examples/kdump-local-path/) | [SSH Target Examples](../examples/kdump-ssh-path/) |
+|---------------------------------------------------------------|------------------------------------------------------|--------------------------------------------------|
+
+## Configure crashkernel Parameter and Enable Kdump
+
+Configure the `crashkernel` parameter, enable kdump and ensure its ready by rebuilding the `initramfs` and restarting the service:
 
 ```bash
-# Check and modify configuration files
-vi /etc/kdump.conf
-vi /etc/sysconfig/kdump
 # Add crashkernel parameter
 rpm-ostree kargs --append='crashkernel=256M'
+
 # Enable kdump and reboot machine
 systemctl enable --now kdump
-# Optional
+
+# Rebuild the initramfs and restart kdump
 kdumpctl rebuild
 kdumpctl restart
 ```
 
-## Prepare the node for rebooting
+## Prepare the Node for Rebooting
+
+Ensure a safe reboot by cordoning and draining the node, then initiate the reboot:
 
 ```bash
 oc adm cordon <node-name>
@@ -53,7 +56,7 @@ systemctl reboot
 
 ## Initiate Manual Kernel Crash Dump
 
-- To manually trigger a kernel dump, use the following commands
+To manually trigger a kernel dump, use the following commands:
 
 ```bash
 # Check if kdump is active
