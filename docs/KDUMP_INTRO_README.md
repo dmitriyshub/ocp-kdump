@@ -2,7 +2,7 @@
 
 `Kdump` is a kernel feature that allows crash dumps to be created during a kernel crash. It produces a `vmcore`(a system-wide coredump), which is the recorded state of the working memory in the host at the time of the crash, that can be analyzed for the root cause analysis of the crash.
 
-`kdump` uses a mechanism called `kexec` to boot into a second kernel whenever the system crashes. This second kernel, often called the crash kernel, boots with very little memory and captures the dump image.
+`kdump` uses a mechanism called `kexec` to boot into a second kernel whenever the system crashes. This second kernel, often called the crash kernel, boots with small memory and captures the dump image.
 
 If `kdump` is enabled on your system, the standard boot kernel will reserve a small section of system RAM and load the `kdump` kernel into the reserved space. When a kernel panic or other fatal error occurs, `kexec` is used to boot into the `kdump` kernel without going through BIOS. The system reboots to the `kdump` kernel that is confined to the memory space reserved by the standard boot kernel, and this kernel writes a copy or image of the system memory to the storage mechanism defined in the configuration files.
 
@@ -32,7 +32,7 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 
 When you enable kdump on a system, its important to understand the conditions under which a crash dump will be triggered. By default, `kdump` doesnt automatically trigger on every possible failure or crash scenario. it relies on specific kernel parameters to determine when to activate and capture a dump.
 
-**NOTE** Typically on `CoreOS` and similar systems, `kdump` is configured to automatically capture a crash dump when a kernel panic occurs without requiring manual configuration of specific events but its important to understand them.
+**NOTE** Typically on `CoreOS` and similar immutable systems, `kdump` is configured to automatically capture a crash dump when a kernel panic occurs without requiring manual configuration of specific events but its important to understand them.
 
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
