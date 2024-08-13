@@ -1,19 +1,19 @@
 # KDUMP Troubleshooting
 
-This section provides essential troubleshooting steps for diagnosing and resolving common issues with kdump configurations. Follow these procedures to ensure proper configuration and operation of kdump.
+This section provides basic troubleshooting steps for diagnosing and resolving common issues with kdump configurations. Follow these procedures to ensure proper configuration and operation of kdump.
 
-## Estimate the crashkernel= Parameter
+## Estimate the `crashkernel` Parameter
 
 - To determine the default and required size for the crash kernel memory
 
 ```bash
-kdumpctl get-default-crashkernel
+kdumpctl showmem
 kdumpctl estimate
 ```
 
-## Estimate the Size of VMCORE Files
+## Estimate the Size of `vmcore` Files
 
-- Use the following command to estimate the space required for the crash dump file
+- To estimate the space required for the crash dump file
 
 ```bash
 # The makedumpfile --mem-usage command estimates how much space the crash dump file requires
@@ -23,16 +23,17 @@ makedumpfile --mem-usage /proc/kcore
 
 ## Check Kernel Commandline Parameters
 
-- Verify the kernel parameters for accuracy
+- To verify the kernel parameters
 
 ```bash
-rpm-ostree kargs # Desired parameters
-cat /proc/cmdline # Actual Parameters
+rpm-ostree kargs # Desired Kernel Parameters
+cat /proc/cmdline # Actual Kernel Parameters
+tail /var/log/kdump # Kdump CMDLINE Log
 ```
 
 ## Review Kdump Configuration Files
 
-- Check the contents of key configuration files
+- Check the content of configuration files
 
 ```bash
 cat /etc/sysconfig/kdump 
@@ -48,6 +49,20 @@ cat /root/.ssh/id_kdump
 
 ```bash
 lsinitrd /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img | grep sd_mod
+```
+
+## Extract and Inspect the kdump initramfs Image
+
+- Extract the content of the `initramfs` image for further `squashfs-root` troubleshooting
+
+[How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/2037313#B)
+
+```bash
+ls -la /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img
+mkdir /var/initrd; cd /var/initrd
+/usr/lib/dracut/skipcpio /var/lib/kdump/initramfs-$(uname -r)kdump.img        | cpio -idmv
+unsquashfs squash-root.img
+ls -la squashfs-root/
 ```
 
 ## Add Additional Kernel Modules
@@ -102,7 +117,7 @@ ls -l /sys/fs/pstore
 
 ## Decode Rendered MachineConfig
 
-- If `MachineConfigPool` status shows `Degraded` due to configuration mismatches, decode the rendered `MachineConfig` content
+- If `MachineConfigPool` status shows `Degraded` due to configuration mismatches, decode the rendered `MachineConfig` content and replace the files
 
 [on-disk validation fails on file content mismatch during MCO upgrade in OpenShift 4](https://access.redhat.com/solutions/5315421)
 
@@ -116,20 +131,6 @@ oc get mc [rendered-worker_name] -o yaml | grep -B5 "path: [escaped_path]" | gre
 oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep source | tail -n 1 | cut -d"," -f2 | base64 -d
 # url encoding
 function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; } ;  urldecode "$(oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep source | tail -n 1 | cut -d"," -f2)"
-```
-
-## Extract and Inspect the kdump initramfs Image
-
-- Extract the content of the `initramfs` image for further `squashfs-root` troubleshooting
-
-[How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/2037313#B)
-
-```bash
-ls -la /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img
-mkdir /var/initrd; cd /var/initrd
-/usr/lib/dracut/skipcpio /var/lib/kdump/initramfs-$(uname -r)kdump.img        | cpio -idmv
-unsquashfs squash-root.img
-ls -la squashfs-root/
 ```
 
 ---
