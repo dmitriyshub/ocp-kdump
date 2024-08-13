@@ -40,6 +40,8 @@ Applying kernel parameters to control kdump behavior can be done in two primary 
 
 2. **Temporary Method:** By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`)
 
+### Kernel Parameters Overview
+
 There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
 
 - **System hangs due to NMI** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault:
@@ -92,19 +94,15 @@ kernel.hardlockup_panic = 1
 kernel.hung_task_panic = 1
 ```
 
-### Adjust Kernel Parameters
-  
-#### Temporary Method
+#### Adjust Kernel Parameters
 
-- Use `rpm-ostree` when configuring this parameters manually:
+- **Temporary Method:** Use `rpm-ostree` when configuring this parameters manually:
 
 ```bash
 rpm-ostree kargs --append='crashkernel=512M' --append='kernel.panic=1' --append='vm.panic_on_oom=1'
 ```
 
-#### Permanent Method
-
-- Use `kernelArguments` when configuring this parameters with a MachineConfig:
+- **Permanent Method:** Use `kernelArguments` when configuring this parameters with a MachineConfig:
 
 ```yaml
   kernelArguments:
@@ -145,7 +143,7 @@ Integrating `kdump` with a Node Self Remediation Operator in a cluster environme
 
 Node Self Remediation Operator is a component that monitors node health and performs remediation actions (like rebooting) if it detects issues such as unresponsive nodes or specific failure conditions.
 
-### Node Self Remediation Configuration **Key Parameters**
+#### Operator Configuration Parameters
 
 - `apiServerTimeout` Defines the timeout for communication with the API server. Setting this to `5s` ensures that the SNR operator does not wait too long for API server responses, which can be crucial in a crash scenario where quick detection and response are necessary
 
@@ -167,7 +165,7 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 - `maxApiErrorThreshold` Maximum number of API errors before taking action. Setting this to `3` helps in determining when to act on persistent issues with the API server.
 
-### Node Self Remediation Operator **Recommendations**
+#### Operator Recommendations
 
 - **Monitor and Adjust Timeouts** Fine-tune the timeouts and intervals based on your environment performance and network conditions. For example, if your cluster nodes are slow to respond or network latency is high, you might need to adjust the timeouts accordingly
 
