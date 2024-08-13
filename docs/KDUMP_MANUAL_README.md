@@ -6,7 +6,7 @@ This section provides guidance on manually configuring kdump for capturing crash
 
 ## Prepare the Configuration Files
 
-Modify `/etc/kdump.conf`:
+Modify `/etc/kdump.conf` file:
 
 ```bash
 path /var/crash
@@ -14,7 +14,7 @@ core_collector makedumpfile -l --message-level 7 -d 31
 default shell
 ```
 
-Modify `/etc/sysconfig/kdump`:
+Modify `/etc/sysconfig/kdump` file:
 
 ```bash
 KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb"
@@ -24,7 +24,7 @@ KDUMP_IMG="vmlinuz"
 ```
 
 | [Configuration Files Examples](../examples/kdump-conf-files/) | [Local Target Examples](../examples/kdump-local-path/) | [SSH Target Examples](../examples/kdump-ssh-path/) |
-|---------------------------------------------------------------|------------------------------------------------------|--------------------------------------------------|
+|---------------------------------------------------------------|--------------------------------------------------------|----------------------------------------------------|
 
 ## Configure crashkernel Parameter and Enable Kdump
 
@@ -61,10 +61,13 @@ To manually trigger a kernel dump, use the following commands:
 ```bash
 # Check if kdump is active
 systemctl is-active kdump
+
 # OPTIONAL: Enable “softlockup_panic” so the kdump will write the vmcore file before the system restarts in case of a crash 
 echo "1" >> /proc/sys/kernel/softlockup_panic
+
 # Checking that the kdump.service has started and exited successfully and prints 1
 cat /sys/kernel/kexec_crash_loaded
+
 # Trigger kernel dump
 echo c > /proc/sysrq-trigger
 ```

@@ -1,10 +1,10 @@
 # KDUMP Troubleshooting
 
-This section provides basic troubleshooting steps for diagnosing and resolving common issues with kdump configurations. Follow these procedures to ensure proper configuration and operation of kdump.
+This section provides basic troubleshooting steps for diagnosing and resolving common issues with kdump configurations, Follow these procedures to ensure proper configuration and operation of kdump.
 
 ## Estimate the `crashkernel` Parameter
 
-- To determine the default and required size for the crash kernel memory
+To determine the default and required size for the crash kernel memory:
 
 ```bash
 kdumpctl showmem
@@ -13,7 +13,7 @@ kdumpctl estimate
 
 ## Estimate the Size of `vmcore` Files
 
-- To estimate the space required for the crash dump file
+To estimate the space required for the crash dump file:
 
 ```bash
 # The makedumpfile --mem-usage command estimates how much space the crash dump file requires
@@ -21,23 +21,24 @@ kdumpctl estimate
 makedumpfile --mem-usage /proc/kcore
 ```
 
-## Check Kernel Commandline Parameters
+## Verify Kernel Commandline Parameters
 
-- To verify the kernel parameters
+To check the kernel parameters:
 
 ```bash
 rpm-ostree kargs # Desired Kernel Parameters
 cat /proc/cmdline # Actual Kernel Parameters
-tail /var/log/kdump # Kdump CMDLINE Log
+tail /var/log/kdump.log # Kdump CMDLINE Log
 ```
 
 ## Review Kdump Configuration Files
 
-- Check the content of configuration files
+Check the content of configuration files:
 
 ```bash
 cat /etc/sysconfig/kdump 
 cat /etc/kdump.conf
+
 # For ssh target path
 cat /root/.ssh/config
 cat /root/.ssh/id_kdump
@@ -45,7 +46,7 @@ cat /root/.ssh/id_kdump
 
 ## Verify initramfs Image Kernel Modules
 
-- Ensure required kernel modules are present in the initramfs image
+Ensure required kernel modules are present in the initramfs image:
 
 ```bash
 lsinitrd /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img | grep sd_mod
@@ -53,9 +54,7 @@ lsinitrd /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img | grep s
 
 ## Extract and Inspect the kdump initramfs Image
 
-- Extract the content of the `initramfs` image for further `squashfs-root` troubleshooting
-
-[How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/2037313#B)
+Extract the content of the `initramfs` image for further `squashfs-root` troubleshooting:
 
 ```bash
 ls -la /var/lib/kdump/initramfs-4.18.0-372.73.1.el8_6.x86_64kdump.img
@@ -65,9 +64,11 @@ unsquashfs squash-root.img
 ls -la squashfs-root/
 ```
 
+[How to extract/unpack/uncompress the contents of the initramfs boot image on RHEL 7,8,9 ?](https://access.redhat.com/solutions/2037313#B)
+
 ## Add Additional Kernel Modules
 
-- Modify `/etc/kdump.conf` to include necessary kernel modules
+Modify `/etc/kdump.conf` to include necessary kernel modules:
 
 ```bash
 extra_modules megaraid_sas sd_mod
@@ -75,7 +76,7 @@ extra_modules megaraid_sas sd_mod
 
 ## Configure Default or Failure Behavior
 
-- Adjust the initramfs behavior for default or failure actions in `/etc/kdump.conf` (depends on `kdump-utils` version)
+Adjust the initramfs behavior for default or failure actions in `/etc/kdump.conf` (depends on `kdump-utils` version):
 
 ```bash
 failure_action shell # Newer Versions (Action to perform in case dumping to the intended target fails)
@@ -84,7 +85,7 @@ default shell #  Older Versions (Same  as  the  "failure_action",  but this dire
 
 ## Modify Kernel Command Line Parameters
 
-- Modify `/etc/sysconfig/kdump` to adjust kernel command line parameters:
+Modify `/etc/sysconfig/kdump` to adjust kernel command line parameters:
 
 ```bash
 KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb ip=dhcp rootflags=prjquota rootflags=nofail udev.children-max=2 ignition.platform.id=metal"
@@ -93,7 +94,7 @@ KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory 
 
 ## Apply New kdump Configurations
 
-- Execute one or more `kdumpctl` commands to apply changes
+Execute one or more `kdumpctl` commands to apply changes:
 
 ```bash
 kdumpctl reload # Reload the crash kernel image and initramfs without triggering a rebuild.
@@ -104,7 +105,7 @@ kdumpctl propagate # Helps to setup key authentication for ssh storage since it'
 
 ## Check `kdump` Logs
 
-- Review logs for debugging purposes
+Review logs for debugging purposes:
 
 ```bash
 cat /var/log/kdump.log
@@ -117,9 +118,7 @@ ls -l /sys/fs/pstore
 
 ## Decode Rendered MachineConfig
 
-- If `MachineConfigPool` status shows `Degraded` due to configuration mismatches, decode the rendered `MachineConfig` content and replace the files
-
-[on-disk validation fails on file content mismatch during MCO upgrade in OpenShift 4](https://access.redhat.com/solutions/5315421)
+If `MachineConfigPool` status shows `Degraded` due to configuration mismatches, decode the rendered `MachineConfig` content and replace the files:
 
 ```bash
 # Check node desired rendered machineconfig name
@@ -132,6 +131,8 @@ oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep
 # url encoding
 function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; } ;  urldecode "$(oc get mc machineconfig-name -o yaml | grep -B5 "path: \/etc\/kdump.conf" | grep source | tail -n 1 | cut -d"," -f2)"
 ```
+
+[on-disk validation fails on file content mismatch during MCO upgrade in OpenShift 4](https://access.redhat.com/solutions/5315421)
 
 ---
 

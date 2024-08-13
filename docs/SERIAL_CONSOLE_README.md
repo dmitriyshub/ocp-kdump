@@ -4,11 +4,9 @@ Enabling the serial console (e.g. `ttyS0`) for kdump troubleshooting lets you ca
 
 [How does one set up a serial terminal and/or console in Red Hat Enterprise Linux?](https://access.redhat.com/articles/3166931)
 
-[Serial Console Configuration Example](../examples/serial-console-conf/)
-
 ## Create a Butane File
 
-- Prepare a Butane configuration file to set up the serial console
+Prepare a Butane configuration file to set up the serial console:
 
 ```yaml
 variant: openshift
@@ -53,9 +51,11 @@ systemd:
 
 **Note** The primary console for system output will be the last console listed in the kernel parameters. In the above example, the VGA console `tty0` is the primary and the serial console is the secondary display. This means messages from init scripts will not go to the serial console, since it is the secondary console, but boot messages and critical warnings will go to the serial console. If init script messages need to be seen on the serial console as well, it should be made the primary by swapping the order of the console parameters.
 
+[Serial Console Configuration Example](../examples/serial-console-conf/)
+
 ## Convert Butane File to MachineConfig
 
-- Convert the `Butane` file to a `YAML` configuration and apply it
+Convert the `Butane` file to a `YAML` configuration and apply it:
 
 ```bash
 butane 99-worker-getty-ttyS0.bu -o 99-worker-getty-ttyS0.yaml
@@ -63,7 +63,7 @@ butane 99-worker-getty-ttyS0.bu -o 99-worker-getty-ttyS0.yaml
 
 ## Apply the MachineConfig
 
-- Use `oc` to apply the `MachineConfig`
+Use `oc` to apply the `MachineConfig`:
 
 ```bash
 oc apply -f 99-worker-getty-ttyS0.yaml
@@ -71,7 +71,7 @@ oc apply -f 99-worker-getty-ttyS0.yaml
 
 ## Monitor the MachineConfigPool Status to Ensure Updates are Applied
 
-- Wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
+Wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration:
 
 ```bash
 watch oc get nodes,mcp
@@ -85,17 +85,21 @@ watch oc get nodes,mcp
 
 3. Configure `Serial over LAN`:
 
-- Ensure the `Serial over LAN` option is enabled
+    - Ensure the `Serial over LAN` option is enabled
 
-- Set the Baud Rate to `115.2kbps` (115200 bps)
+    - Set the Baud Rate to `115.2kbps` (115200 bps)
 
-- Choose the appropriate `COM` port (`com0`)
+    - Choose the appropriate `COM` port (`com0`)
 
-- The default `SSH` port is typically 22, but `CIMC` might use a specific port like 2400
+    - The default `SSH` port is typically 22, but `CIMC` might use a specific port like 2400
 
-- Save the Configuration
+    - Save the Configuration
 
-- To connect to the serial console via `SSH`, open a terminal on your local machine and use an `SSH` client to connect to the `CIMC` IP address on the specified `SSH` port, for example: `ssh -p 2400 ocp@cimc_node_dns_address`
+4. To connect to the serial console via `SSH`, open a terminal on your local machine and use an `SSH` client to connect to the `CIMC` IP address on the specified `SSH` port, for example:
+
+```bash
+ssh -p 2400 ocp@cimc_node_dns_address
+```
 
 ---
 

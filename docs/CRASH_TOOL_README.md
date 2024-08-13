@@ -4,11 +4,11 @@ The `crash` tool is a powerful utility for analyzing the state of a Linux system
 
 When `kdump` captures a system crash, it generates three key files that are crucial for post-mortem analysis:
 
-- `vmcore` is the primary memory dump file containing a snapshot of the system RAM at the time of the crash. It includes all in-memory data, such as the kernel’s memory and process information, providing the raw data needed for in-depth analysis with tools like `crash`
+1. `vmcore` is the primary memory dump file containing a snapshot of the system RAM at the time of the crash. It includes all in-memory data, such as the kernel’s memory and process information, providing the raw data needed for in-depth analysis with tools like `crash`
 
-- `vmcore-dmesg.txt` file logs the kernel message buffer leading up to the crash. It records the kernel log messages, helping to identify events or errors that directly preceded the crash, such as hardware faults or out-of-memory conditions
+2. `vmcore-dmesg.txt` file logs the kernel message buffer leading up to the crash. It records the kernel log messages, helping to identify events or errors that directly preceded the crash, such as hardware faults or out-of-memory conditions
 
-- `kexec-dmesg.log` file details the operations performed by the secondary kdump kernel during the capture process. It is important for troubleshooting any issues that occur during the dumping of vmcore, such as errors in writing the file to disk
+3. `kexec-dmesg.log` file details the operations performed by the secondary kdump kernel during the capture process. It is important for troubleshooting any issues that occur during the dumping of vmcore, such as errors in writing the file to disk
 
 Together these files provide a comprehensive view of the system state before, during, and after the crash, enabling thorough analysis and diagnosis.
 
@@ -16,11 +16,11 @@ Together these files provide a comprehensive view of the system state before, du
 
 `vmlinux` is the uncompressed kernel code, `vmlinuz`, and `vmlinux.bin` are compressed versions for booting. `zimage` is an older compressed format, and `bzImage` is an improved version.
 
-- [Differences Between vmlinux, vmlinuz, vmlinux.bin, zimage, and bzimage](https://www.baeldung.com/linux/kernel-images)
+[Differences Between vmlinux, vmlinuz, vmlinux.bin, zimage, and bzimage](https://www.baeldung.com/linux/kernel-images)
 
-## To uncompress the kernel use the command below (Use it only with custom/unofficial kernels <<- Not Recommended)
+### To uncompress the kernel (Use it only with custom/unofficial kernels <<- Not Recommended)
 
-- `vmlinuz` is a compressed file, but crash requires an uncompressed file `vmlinux`, which is compiled with `-g` option.
+`vmlinuz` is a compressed file, but crash requires an uncompressed file `vmlinux`, which is compiled with `-g` option.
 Make sure your kernel is compiled with `-g` option, and then you can get an uncompressed `vmlinux` file from compressed `vmlinuz`, using the method as follows:
 
 ```bash
@@ -30,7 +30,7 @@ dd if=/host/usr/lib/modules/$(uname -r)/vmlinuz bs=1 skip=18865 | zcat > /tmp/vm
 
 ## Crash Tool Basic Usage
 
-- For help on any command below, enter `help <command>`
+For help on any command below, enter `help <command>`
 
 ```bash
 crash> help
@@ -62,11 +62,9 @@ crash> help log
 crash> struct task_struct.<field> <task_struct_address>
 ```
 
----
+### Start Analyzing VMCORE Files
 
-## Start Analyzing VMCORE files
-
-- When starting a crash tool, we'll get detailed system information
+When starting a crash tool, you will get detailed system information output:
 
 ```bash
 WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
@@ -91,7 +89,7 @@ LOAD AVERAGE: 0.17, 0.36, 0.49
        STATE: TASK_RUNNING (SYSRQ) # <<- The state of the process when the panic occurred
 ```
 
-- You may see warnings like `kernel relocated`, This indicates that the kernel image was relocated in memory, and symbols were patched accordingly
+**NOTE** You may see warnings like `kernel relocated`, This indicates that the kernel image was relocated in memory, and symbols were patched accordingly:
 
 ```bash
 WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
@@ -99,12 +97,14 @@ WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 
  **NOTE:** The Output With Panic Process `PID: 27435`, Panic Message `PANIC: "sysrq: SysRq : Trigger a crash"` and `COMMAND: "bash"` indicates which process was causing the kernel dump crash!
 
-## Commands for a high-level overview
+## Commands for a High-level Overview
 
-### `bt` shows the backtrace of the crashed kernel thread giving insight into where the crash occurred (process execution history)
+### Show the Backtrace of the Crashed Kernel Thread
+
+`bt` giving insight into where the crash occurred (process execution history).
 
 This backtrace shows the sequence of function calls leading to a kernel panic.
-The output shows the series of function calls that were active in the kernel when the crash occurred. Each line represents a frame in the stack, with the most recent function call at the top.
+The output shows the series of function calls that were active in the kernel when the crash occurred. Each line represents a frame in the stack, with the most recent function call at the top:
 
 ```bash
 crash> bt
@@ -139,10 +139,11 @@ PID: 27435  TASK: ffff9f4e8e8f0000  CPU: 14  COMMAND: "bash" #
 
 - `fffffffa626822e` The address of the machine_kexec function in the kernel's virtual memory
 
-### `ps` Displays information about processes running at the time of the crash. Look for processes in an unusual state (e.g. D state)
+### Display Information About Processes Running at the Time of the Crash
+
+**NOTE** Look for processes in an unusual state (e.g. `D` state)!
 
 ```bash
-ps | grep ">"
 crash> ps | grep ">"
 >     0      0   0  ffffffffa7a18840  RU   0.0       0      0  [swapper/0]
 >     0      0   1  ffff9f4e8d108000  RU   0.0       0      0  [swapper/1]
@@ -150,10 +151,10 @@ crash> ps | grep ">"
 ...
 ```
 
-- Check the panic process using `ps` with the PID given
+Check the panic process using `ps` with the PID given:
 
 ```bash
-crash> ps | grep 27435
+crash> ps 27435
 > 27435  23470  14  ffff9f4e8e8f0000  RU   0.0   24904   5312  bash
 ```
 
@@ -179,16 +180,19 @@ crash> ps | grep 27435
 
 - `bash` The command or name of the process
 
-### `log` Retrieves the kernel log leading up to the crash. This can provide clues about what caused the system to crash
+### Retrieve the Kernel Log Leading Up to the Dump Crash
+
+`log` can provide clues about what caused the system to crash:
 
 ```bash
 crash> log
 [    0.000000] microcode: microcode updated early to revision 0x2007006, date = 2023-03-06
 [    0.000000] Linux version 4.18.0-372.73.1.el8_6.x86_64 (mockbuild@x86-vm-07.build.eng.bos.redhat.com) (gcc version 8.5.0 20210514 (Red Hat 8.5.0-10) (GCC)) #1 SMP Fri Sep 8 13:16:27 EDT 2023
-...
 ```
 
-### `mount` shows the mount points
+### Show the Mount Points
+
+`mount` command within the crash utility provides a detailed view of the mounted file systems at the time of the crash:
 
 ```bash
 crash> mount
@@ -205,37 +209,39 @@ ffff9f6b04ff6280 ffff9fadcc8da000 proc   proc      /ostree/deploy/rhcos/deploy/e
 
 - `SUPERBLK` The memory address of the superblock structure. The superblock contains metadata about the filesystem, like its size, status, and other information
 
-- `TYPE` The type of filesystem mounted. This could be ext4, xfs, sysfs, proc, etc., depending on the specific filesystem
+- `TYPE` The type of filesystem mounted. This could be ext4, xfs, sysfs, proc, etc. depending on the specific filesystem
 
 - `DEVNAME` The device name associated with the mount. This could be a physical device (like /dev/sda1) or a virtual device (like none for certain special filesystems)
 
-- `DIRNAME` The directory on which the filesystem is mounted. This is the path where the filesystem is accessible.
+- `DIRNAME` The directory on which the filesystem is mounted. This is the path where the filesystem is accessible
 
 ## Investigate Kernel Panics
 
 The first step in diagnosing a kernel crash is to examine the backtrace, which shows the sequence of function calls leading up to the crash. This is crucial for pinpointing the exact location in the kernel code where the panic occurred.
 
-### If the backtrace shows a kernel panic, investigate the cause
+### If the Backtrace Shows a kernel Panic, Investigate the Cause
+
+Review the backtrace for any functions or modules that might have caused the crash. Pay attention to the final few function calls before the panic, as these often provide clues about the root cause:
 
 ```bash
 bt -a
 ```
 
-Review the backtrace for any functions or modules that might have caused the crash. Pay attention to the final few function calls before the panic, as these often provide clues about the root cause
+### Check the Logs for OOM Killer Activity
 
-### Check the logs for OOM killer activity
+Out of memory (`OOM`) situations can trigger the kernel to kill processes to reclaim memory, which might lead to instability or crashes.
 
-Out-of-memory (`OOM`) situations can trigger the kernel to kill processes to reclaim memory, which might lead to instability or crashes
+Identify any logs related to the `OOM` killer, If found note which processes were terminated and consider whether these `OOM` events correlate with the timing of the crash:
 
 ```bash
 crash> log | grep -i "oom"
 ```
 
-Identify any logs related to the `OOM` killer, If found note which processes were terminated and consider whether these `OOM` events correlate with the timing of the crash.
-
 ### Check Networking Issues
 
 Network interface problems can contribute to kernel crashes, especially if they cause critical system services to fail.
+
+Check the list of network devices and their IP addresses, Look for any interfaces that are down or have unusual configurations, Also note any network-related logs:
 
 ```bash
 crash> net
@@ -246,11 +252,11 @@ ffff9f4fc1b5c000  ens5f1
 ...
 ```
 
-Check the list of network devices and their IP addresses, Look for any interfaces that are down or have unusual configurations, Also note any network-related logs.
-
-### `kmem` gives you an overview of memory usage, including free/used memory and slab information
+### Memory Usage Overview
 
 Memory pressure or mismanagement can often lead to kernel crashes.
+
+`kmem` gives you an overview of memory usage, including free/used memory and slab information:
 
 ```bash
 crash> kmem -i
@@ -265,9 +271,9 @@ crash> kmem -i
 ...
 ```
 
-### Investigate open files and any potential lockups
+### Investigate Open Files and Any Potential Lockups
 
-File system locks or an huge number of open files can lead to system hangs or lockups, contributing to instability.
+File system locks or an huge number of open files can lead to system hangs or lockups, contributing to instability:
 
 ```bash
 crash> files
@@ -276,9 +282,9 @@ crash> foreach files | grep "locked"
 
 Look for any files that are locked or processes with a large number of open files. This could indicate deadlocks, resource contention, or file system issues that contributed to the crash.
 
-### To gain additional context around the system's state leading up to the crash, review the dmesg logs saved by kdump
+### To Gain Additional Context Around the System State Leading Up to the Dump Crash
 
-The kdump mechanism captures critical system information at the time of the crash. Reviewing these logs provides additional context about the system's state and the kdump process itself.
+The kdump mechanism captures critical system information at the time of the crash. Reviewing these logs provides additional context about the system's state and the kdump process itself:
 
 - The `vmcore-dmesg.txt` file saved by kdump can provide system state context
 

@@ -6,11 +6,11 @@ Kernel crashes can be tricky to diagnose, but with the crash utility, you can ga
 
 You can use a custom container image pre-configured with the crash tool to streamline this process. This setup lets you quickly analyze vmcore files by simply mounting them into the container.
 
-- [Managing, Monitoring and updating the Kernel - Analyizing a core dump](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/analyzing-a-core-dump_managing-monitoring-and-updating-the-kernel#analyzing-a-core-dump_managing-monitoring-and-updating-the-kernel)
+[Managing, Monitoring and updating the Kernel - Analyizing a core dump](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/analyzing-a-core-dump_managing-monitoring-and-updating-the-kernel#analyzing-a-core-dump_managing-monitoring-and-updating-the-kernel)
 
 ## Build a new container image with crash tool and the kernel debuginfo packages
 
-- Download all the required packages for the `vmcore` kernel version from the [Customer Portal](https://access.redhat.com/downloads/content/package-browser)
+Download all the required packages for the `vmcore` kernel version from the [Customer Portal](https://access.redhat.com/downloads/content/package-browser):
 
 ```bash
 ls -l rpms/
@@ -21,9 +21,7 @@ ls -l rpms/
 -rw-r--r--  1 dshtranv  staff   73930952 Aug  6 11:27 kernel-debuginfo-common-x86_64-4.18.0-372.73.1.el8_6.x86_64.rpm
 ```
 
-- Create the `Containerfile` and build the image
-
-[Containerfile Example](../examples/crash-tool-image/)
+Create the `Containerfile`:
 
 ```docker
 FROM registry.url/ubi8/ubi
@@ -42,15 +40,17 @@ RUN yum localinstall -y /tmp/rpms/*.rpm && \
 ENTRYPOINT ["crash", /usr/lib/debug/lib/modules/<kernel.version>/vmlinux]
 ```
 
+[Containerfile Example](../examples/crash-tool-image/)
+
+Build the image:
+
 ```bash
 podman build -t registry.url/kdump-crash-tool:<kernel.version> .
 ```
 
-## Use The Pre Configured Container Image with crash tool and kernel debuginfo requirements
+## Use The Pre Configured Container Image with crash tool and all the requirements
 
 The image is configured with all the necessary tools and dependencies for the crash utility kernel version `registry.url/kdump-crash-tool:<kernel.version>`
-
-- `<registry.url>/` `kdump-crash-tool` `:4.18.0-372.73.1.el8_6` (Current Kernel Version Tag)
 
 - Verify that the vmcore file matches the kernel version you're working with:
 
@@ -58,13 +58,17 @@ The image is configured with all the necessary tools and dependencies for the cr
 crash --osrelease /path/to/vmcore
 ```
 
-- Example command to run the container and analyze a vmcore file, this command mounts the vmcore file into the container and runs the crash utility with the necessary arguments:
+Example command to run the container and analyze a vmcore file, this command mounts the vmcore file into the container and runs the crash utility with the necessary arguments:
 
 **NOTE:** Replace `/path/to/vmcore` with the actual path to the vmcore!
 
 ```bash
 podman run --rm -it -v /path/to/vmcore:/vmcore:Z kdump-crash-tool:4.18.0-372.73.1.el8_6 /vmcore
-...
+```
+
+Output Example:
+
+```bash
 WARNING: kernel relocated [594MB]: patching 105453 gdb minimal_symbol values
 
       KERNEL: /usr/lib/debug/lib/modules/4.18.0-372.73.1.el8_6.x86_64/vmlinux

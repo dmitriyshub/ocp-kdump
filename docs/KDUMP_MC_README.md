@@ -4,13 +4,9 @@ This section outlines configuring kdump using MachineConfig in an OpenShift clus
 
 **NOTE:** Always Backup the configuration files!
 
-## Choose Your Preffered Target Path `local` or `ssh` and Create Butane File
+## Choose Your Preffered Target Path and Create Butane File
 
-- Prepare a Butane configuration file to set up the kdump service
-
-[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
-
-**NOTE** The `makedumpfile -F` option is required only for the `SSH` target!
+Prepare a Butane configuration file to set up the kdump service:
 
 ```yaml
 variant: openshift
@@ -70,9 +66,13 @@ systemd:
       enabled: true
 ```
 
-## Convert the Butane file to YAML format
+**NOTE** The `makedumpfile -F` option is required only for the `SSH` target!
 
-- Convert the `Butane` file to a `YAML` configuration
+[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
+
+## Convert the Butane File to MachineConfig
+
+Convert the `Butane` file to a `YAML` configuration:
 
 ```bash
 butane 99-worker-kdump.bu -o 99-worker-kdump.yaml
@@ -80,7 +80,7 @@ butane 99-worker-kdump.bu -o 99-worker-kdump.yaml
 
 ## Apply the MachineConfig
 
-- Use `oc` to apply the `MachineConfig`
+Use `oc` to apply the `MachineConfig`:
 
 ```bash
 oc apply -f 99-worker-kdump.yaml
@@ -88,7 +88,7 @@ oc apply -f 99-worker-kdump.yaml
 
 ## Monitor the MachineConfigPool Status to Ensure Updates are Applied
 
-- Wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration
+Wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration:
 
 ```bash
 watch oc get nodes,mcp
@@ -96,16 +96,19 @@ watch oc get nodes,mcp
 
 ## Initiate Manual Kernel Crash Dump
 
-- To manually trigger a kernel dump, use the following commands
+To manually trigger a kernel dump, use the following commands:
 
 ```bash
 # Check if kdump is active
 systemctl is-active kdump
+
 # OPTIONAL: Enable “softlockup_panic” so the kdump will write the vmcore file before the system restarts in case of a crash 
 echo "1" >> /proc/sys/kernel/softlockup_panic
-# checking that the kdump.service has started and exited successfully and prints 1
+
+# Checking that the kdump.service has started and exited successfully and prints 1
 cat /sys/kernel/kexec_crash_loaded
-# trigger kernel dump
+
+# Trigger kernel dump
 echo c > /proc/sysrq-trigger
 ```
 
