@@ -36,13 +36,13 @@ When you enable kdump on a system, its important to understand the conditions un
 
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
-- Through the kernel command line (e.g. via a `MachineConfig`) **PermanentMethod**
+- **PermanentMethod:** Through the kernel command line (e.g. via a `MachineConfig`)
 
-- By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`) **Temporary Method**
+- **Temporary Method:** By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`)
 
 There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
 
-- **System hangs due to NMI:** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault
+- **System hangs due to NMI** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault
 
 ```bash
 kernel.unknown_nmi_panic = 1
@@ -68,13 +68,13 @@ watchdog_thresh = 10
 mce = 0
 ```
 
-- **Out of memory (OOM) Kill event:** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory)
+- **Out of memory (OOM) Kill event** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory)
 
 ```bash
 vm.panic_on_oom = 1
 ```
 
-- **CPU Soft Lockup event:** Occurs when a task is using the `CPU` for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds)
+- **CPU Soft Lockup event** Occurs when a task is using the `CPU` for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds)
 
 ```bash
 kernel.softlockup_panic = 1
@@ -86,7 +86,7 @@ kernel.softlockup_panic = 1
 kernel.hardlockup_panic = 1
 ```
 
-- **Hung / Blocked Task event:** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds)
+- **Hung / Blocked Task event** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds)
 
 ```bash
 kernel.hung_task_panic = 1
