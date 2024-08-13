@@ -11,7 +11,9 @@ One of the key steps in configuring `kdump` is to reserve a portion of the syste
 The `kdump` service uses a `core_collector` program to capture the crash dump image. In rhel, the `makedumpfile` utility is the default `core_collector`. It helps shrink the dump file by:
 
 - Compressing the size of a crash dump file and copying only necessary pages using various `dump_levels`
+
 - Excluding unnecessary crash dump pages
+
 - Filtering the page types to be included in the crash dump
 
 To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
@@ -44,7 +46,7 @@ Applying kernel parameters to control kdump behavior can be done in two primary 
 
 There are several parameters that control under which circumstances kdump is activated. Most of these can be enabled via `sysctl` tunable parameters, you can refer to the most commonly used below
 
-- **System hangs due to NMI** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault:
+**System hangs due to NMI** Occurs when a `Non-Maskable` Interrupt is issued, usually due to a hardware fault:
 
 ```bash
 kernel.unknown_nmi_panic = 1
@@ -52,43 +54,43 @@ kernel.panic_on_io_nmi = 1
 kernel.panic_on_unrecovered_nmi = 1
 ```
 
-- **Control NMI behavior** using the `nmi_watchdog`:
+**Control NMI behavior** using the `nmi_watchdog`:
 
 ```bash
 nmi_watchdog = 1
 ```
 
-- **Configure watchdog timeout threshold** using `watchdog_thresh`:
+**Configure watchdog timeout threshold** using `watchdog_thresh`:
 
 ```bash
 watchdog_thresh = 10
 ```
 
-- **Machine Check Exceptions (MCE)** indicate hardware errors and configure the system to panic on `MCE` events:
+**Machine Check Exceptions (MCE)** indicate hardware errors and configure the system to panic on `MCE` events:
 
 ```bash
 mce = 0
 ```
 
-- **Out of memory (OOM) Kill event** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory):
+**Out of memory (OOM) Kill event** Occurs when a memory request (Page Fault or kernel memory allocation) is made while not enough memory is available, thus the system terminates an active task (usually a non-prioritized process utilizing a lot of memory):
 
 ```bash
 vm.panic_on_oom = 1
 ```
 
-- **CPU Soft Lockup event** Occurs when a task is using the `CPU` for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds):
+**CPU Soft Lockup event** Occurs when a task is using the `CPU` for more than time the allowed threshold (the tunable `kernel.watchdog_thresh`, default is `20` seconds):
 
 ```bash
 kernel.softlockup_panic = 1
 ```
 
-- **CPU Hard Lockup event**  More severe than soft lockups, typically indicating that a `CPU` has stopped working entirely:
+**CPU Hard Lockup event**  More severe than soft lockups, typically indicating that a `CPU` has stopped working entirely:
 
 ```bash
 kernel.hardlockup_panic = 1
 ```
 
-- **Hung / Blocked Task event** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds):
+**Hung / Blocked Task event** Occurs when a process is stuck in Uninterruptible-Sleep (D-state) for more time than the allowed threshold (the tunable `kernel.hung_task_timeout_secs`, default is `120` seconds):
 
 ```bash
 kernel.hung_task_panic = 1
@@ -96,13 +98,13 @@ kernel.hung_task_panic = 1
 
 #### Adjust Kernel Parameters
 
-- **Temporary Method:** Use `rpm-ostree` when configuring this parameters manually:
+For temporary method use `rpm-ostree` when configuring this parameters manually:
 
 ```bash
 rpm-ostree kargs --append='crashkernel=512M' --append='kernel.panic=1' --append='vm.panic_on_oom=1'
 ```
 
-- **Permanent Method:** Use `kernelArguments` when configuring this parameters with a MachineConfig:
+For permanent method use `kernelArguments` when configuring this parameters with a MachineConfig:
 
 ```yaml
   kernelArguments:
