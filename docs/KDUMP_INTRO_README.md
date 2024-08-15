@@ -10,6 +10,16 @@ One of the key steps in configuring `kdump` is to reserve a portion of the syste
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash` directory of the local file system.
 
+## Kdump Procedure Overview
+
+1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
+
+2. The system panics
+
+3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
+
+4. The normal kernel's memory is captured into a `vmcore`
+
 ## Minimize Core Dump Files
 
 The `kdump` service uses a `core_collector` program to capture the crash dump image. In rhel, the `makedumpfile` utility is the default `core_collector`. It helps shrink the dump file by:
@@ -48,16 +58,6 @@ The `--message-level` option controls the verbosity of makedumpfile output, allo
 You can combine these levels to customize the output. The maximum value is `31`, which enables all message types.
 
 **NOTE** To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
-
-## Kdump Procedure Overview
-
-1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
-
-2. The system panics
-
-3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
-
-4. The normal kernel's memory is captured into a `vmcore`
 
 ## Controlling which events trigger a Kernel Panic
 
