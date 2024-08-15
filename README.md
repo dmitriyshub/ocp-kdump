@@ -2,7 +2,7 @@
 
 This repository is focused on setting up kdump on OpenShift nodes. We created it to address situations where worker nodes freeze without warning, preventing us from troubleshooting the underlying cause. With kdump we can capture detailed crash dumps, providing the insights needed to diagnose and prevent these issues from recurring.
 
-- [Summary for the Reviewer](./REVIEW_README.md)
+- [Review Summary](/docs/KDUMP_REVIEW_README.md)
 
 ## 📖 Table of Content
 
