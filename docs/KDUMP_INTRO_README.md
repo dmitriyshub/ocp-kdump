@@ -8,6 +8,10 @@ If `kdump` is enabled on your system, the standard boot kernel will reserve a sm
 
 One of the key steps in configuring `kdump` is to reserve a portion of the system's memory for the `kdump` kernel. This is done using the `crashkernel` parameter, which specifically reserves memory for the `kdump` kernel during boot.
 
+The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash` directory of the local file system.
+
+## Minimize Core Dump Files
+
 The `kdump` service uses a `core_collector` program to capture the crash dump image. In rhel, the `makedumpfile` utility is the default `core_collector`. It helps shrink the dump file by:
 
 - Compressing the size of a crash dump file and copying only necessary pages using various `dump_levels`
@@ -16,9 +20,34 @@ The `kdump` service uses a `core_collector` program to capture the crash dump im
 
 - Filtering the page types to be included in the crash dump
 
-To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
+The `makedumpfile` tool provides two essential options for this purpose, `-d` to minimize the dump file size and `--message-level` to control the verbosity of output during processing.
 
-The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash` directory of the local file system.
+The `-d` option in makedumpfile allows you to exclude certain types of pages from the dump file, significantly reducing its size. This option is helpful in environments with limited storage or requiring quicker analysis.
+
+**Dump Levels:**
+
+- `1` Excludes pages filled with zeros
+- `2` Excludes non-private cache pages
+- `4` Excludes all cache pages
+- `8` Excludes user process data pages
+- `16` Excludes free pages
+
+You can combine these levels to tailor the dump file to your needs. The maximum dump level is `31`, which excludes all unnecessary pages.
+
+The `--message-level` option controls the verbosity of makedumpfile output, allowing you to choose which messages to display during the dump file creation process.
+
+**Message Levels:**
+
+- `0` No messages
+- `1` Progress indicators
+- `2` Common messages
+- `4` Error messages
+- `8` Debug messages
+- `16` Report messages
+
+You can combine these levels to customize the output. The maximum value is `31`, which enables all message types.
+
+**NOTE** To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
 
 ## Kdump Procedure Overview
 
