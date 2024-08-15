@@ -33,6 +33,8 @@ sshkey /root/.ssh/mykey
 nfs target.nfs.com:/target/path
 ```
 
+**NOTE** When using the `NFS`or `SSH` directive, kdump automatically attempts to mount/connect the `NFS`/`SSH` target to check the disk space!
+
 ## Minimize Core Dump Files
 
 The `kdump` service uses a `core_collector` program to capture the crash dump image. In rhel based operating systems the `makedumpfile` utility is the default `core_collector`. It helps shrink the dump file by:
