@@ -62,9 +62,6 @@ To manually trigger a kernel dump, use the following commands:
 # Check if kdump is active
 systemctl is-active kdump
 
-# OPTIONAL: Enable “softlockup_panic” so the kdump will write the vmcore file before the system restarts in case of a crash 
-echo "1" >> /proc/sys/kernel/softlockup_panic
-
 # Checking that the kdump.service has started and exited successfully and prints 1
 cat /sys/kernel/kexec_crash_loaded
 

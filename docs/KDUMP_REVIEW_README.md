@@ -16,7 +16,7 @@ This summary will guide the reviewer through the KDUMP implementation and docume
 
 ## Review Focus
 
-This review will focus primarily on the KDUMP documentation, particularly the table of contents, to ensure it is complete, logically structured, and easy to navigate. While the focus of this review is on the KDUMP documentation itself, the next section of the document will include links to official documentation, blogs, and other external resources that may be helpful. However, these resources are outside the scope of this review and should be considered supplementary.
+This review will focus primarily on the KDUMP documentation, especially the table of contents, to ensure it is complete, logically structured and easy to navigate. While the focus of this review is on the KDUMP documentation itself, the next section of the document will include links to official documentation, blogs, and other external resources that may be helpful. However, these resources are outside the scope of this review and should be considered supplementary.
 
 Please be aware that the KDUMP implementation with node self remediation operator is outside the scope of this review. The operator that handles this functionality is already configured within the cluster, and no interaction with it is required during this review. This section is included for awareness only so we can refer to it in the future if any issues related to KDUMP will arise.
 
