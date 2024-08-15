@@ -13,11 +13,8 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 ## Kdump Procedure Overview
 
 1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
-
 2. The system panics
-
 3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
-
 4. The normal kernel's memory is captured into a `vmcore`
 
 ## Minimize Core Dump Files
@@ -66,7 +63,6 @@ When you enable kdump on a system, its important to understand the conditions un
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
 1. **PermanentMethod:** Through the kernel command line (e.g. via a `MachineConfig`)
-
 2. **Temporary Method:** By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`)
 
 ### Kernel Parameters Overview
@@ -149,13 +145,11 @@ For permanent method use `kernelArguments` when configuring this parameters with
 Properly configuring both the crash triggers and memory reservation is essential for `kdump` to function as intended.
 
 - By setting the appropriate parameters (e.g. `kernel.panic=1`, `vm.panic_on_oom=1`), you ensure that `kdump` will trigger on specific events, allowing you to capture memory dumps that are critical for diagnosing issues
-
 - Without these parameters, your system might simply reboot or remain unresponsive during critical failures, leaving you without valuable diagnostic data
 
 Enabling `kdump` without configuring the associated kernel parameters and memory reservation means that `kdump` might not activate during critical events, leading to missed opportunities for diagnostics. To ensure `kdump` functions effectively, it's important to:
 
 - Set kernel parameters like `kernel.softlockup_panic`, `vm.panic_on_oom`, and others according to the events you want to capture
-
 - Configure `crashkernel` parameter to reserve sufficient memory for kdump to operate
 
 These steps help ensure that when a crash occurs, `kdump` can capture the necessary information to diagnose the underlying issue.
@@ -175,33 +169,21 @@ Node Self Remediation Operator is a component that monitors node health and perf
 #### Operator Configuration Parameters
 
 - `apiServerTimeout` Defines the timeout for communication with the API server. Setting this to `5s` ensures that the SNR operator does not wait too long for API server responses, which can be crucial in a crash scenario where quick detection and response are necessary
-
 - `peerApiServerTimeout` Similar to `apiServerTimeout`, this sets the timeout for communication with peer nodes. A `5s` timeout helps ensure that the operator detects issues promptly when interacting with other nodes
-
 - `isSoftwareRebootEnabled` When set to true, this allows the SNR operator to initiate a software reboot if necessary. This is important for kdump as it ensures that the system can reboot cleanly and attempt to capture a dump if a crash occurs
-
 - `watchdogFilePath` Points to the watchdog device (e.g. `/dev/watchdog`). This device is used for hardware watchdog functions, which can help reset the system in case of a hang or severe issue. Ensure that kdump is properly configured to work with your watchdog device
-
 - `peerDialTimeout` Sets the timeout for dialing peers. A `5s` timeout helps ensure that peer communication issues are detected quickly
-
 - `peerUpdateInterval` Defines how often the operator updates the status of peers. Setting this to `15m` helps balance between frequent checks and resource usage
-
 - `apiCheckInterval` Sets the interval at which the SNR operator checks the API server’s health. A `15s` interval is reasonable for detecting issues without overwhelming the system with checks
-
 - `peerRequestTimeout` Timeout for peer requests. A `5s` timeout ensures timely detection of communication problems with peers.
-
 - `safeTimeToAssumeNodeRebootedSeconds` Time to wait before assuming a node is rebooted. A `180s` setting provides a buffer to handle scenarios where the node may be recovering or performing tasks post-crash
-
 - `maxApiErrorThreshold` Maximum number of API errors before taking action. Setting this to `3` helps in determining when to act on persistent issues with the API server.
 
 #### Operator Recommendations
 
 - **Monitor and Adjust Timeouts** Fine-tune the timeouts and intervals based on your environment performance and network conditions. For example, if your cluster nodes are slow to respond or network latency is high, you might need to adjust the timeouts accordingly
-
 - **Enable Software Reboot** Ensure that `isSoftwareRebootEnabled` is set to true so that the operator can handle crashes effectively, allowing the system to reboot and kdump to capture the necessary dump
-
 - **Configure Watchdog** Make sure that the `watchdogFilePath` is correctly set and that the hardware watchdog is functioning as expected to reset unresponsive nodes
-
 - **Test Remediation Actions** Perform testing to ensure that the `SNR` operator can handle various crash scenarios, including those where `kdump` is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected
 
 By aligning these parameters and ensuring proper configuration, you can enhance the effectiveness of `kdump` and the Node Self Remediation Operator in managing and recovering from crashes in a cluster environment.
@@ -209,17 +191,11 @@ By aligning these parameters and ensuring proper configuration, you can enhance 
 ## Kdump Testing Summary Steps
 
 1. Test the `kdump` in rhel host and ensure that everything is working correctly and the `kdump` generates the vmcore files in the target path successfully (Optional)
-
 2. Configure the `machineconfig` yaml file with all the necessary configuration of `kdump` systemd unit, `kdump` configuration files, and memory reservation `crashkernel=value` parameter
-
 3. Create the `machineconfig` object in the cluster and wait until the `machineconfig` operator picks up the changes and starts to update, initialize, and reboot the nodes
-
 4. Wait until the `machineconfigpool` updated status is `True` and the nodes are in `Ready` status
-
 5. Ensure that all new configuration provided by the `machineconfig` was configured correctly on the nodes
-
 6. Trigger the kernel crash and wait until the node reboots and becomes in `Ready` status again
-
 7. Start the debug pod again and check if the `vmcore` files exist in the target path
 
 ---
