@@ -25,9 +25,7 @@ The crash dump or `vmcore` is usually stored as a file in a local file system, w
 The `kdump` service uses a `core_collector` program to capture the crash dump image. In rhel, the `makedumpfile` utility is the default `core_collector`. It helps shrink the dump file by:
 
 - Compressing the size of a crash dump file and copying only necessary pages using various `dump_levels`
-
 - Excluding unnecessary crash dump pages
-
 - Filtering the page types to be included in the crash dump
 
 The `makedumpfile` tool provides two essential options for this purpose, `-d` to minimize the dump file size and `--message-level` to control the verbosity of output during processing.
