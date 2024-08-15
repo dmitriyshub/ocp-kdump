@@ -8,14 +8,30 @@ If `kdump` is enabled on your system, the standard boot kernel will reserve a sm
 
 One of the key steps in configuring `kdump` is to reserve a portion of the system's memory for the `kdump` kernel. This is done using the `crashkernel` parameter, which specifically reserves memory for the `kdump` kernel during boot.
 
-The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. Only one of these options to preserve a crash dump file can be set at a time. The default behavior is to store it in the `/var/crash` directory of the local file system.
-
 ## Kdump Procedure Overview
 
 1. The normal kernel is booted with `crashkernel=<value>` as a kernel option, reserving some memory for the `kdump` kernel. The memory reserved by the crashkernel parameter is not available to the normal kernel during regular operation. It is reserved for later use by the `kdump` kernel
 2. The system panics
 3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
 4. The normal kernel's memory is captured into a `vmcore`
+
+## Crash Dump Target Path
+
+The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. **Only one of these options to preserve a crash dump file can be set at a time**. The default behavior is to store it in the `/var/crash` directory of the local file system.
+
+**SSH Example:**
+
+```bash
+path /target/path
+ssh user@target.host.com
+sshkey /root/.ssh/mykey
+```
+
+**NFS Example:**
+
+```bash
+nfs target.nfs.com:/target/path
+```
 
 ## Minimize Core Dump Files
 
@@ -52,7 +68,27 @@ The `--message-level` option controls the verbosity of makedumpfile output, allo
 
 You can combine these levels to customize the output. The maximum value is `31`, which enables all message types.
 
+```bash
+core_collector makedumpfile -l --message-level 7 -d 31
+```
+
 **NOTE** To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
+
+## Configuring Default Failure Responses
+
+By default, when kdump fails to save a crash dump file to the configured target location, the system reboots and loses the dump. You can change this default behavior by configuring kdump to perform a different action if it fails to save the core dump. The available actions are:
+
+- `dump_to_rootfs` Saves the core dump to the root file system.
+- `reboot` Reboots the system, resulting in the loss of the core dump.
+- `halt` Stops the system, resulting in the loss of the core dump.
+- `poweroff` Powers off the system, resulting in the loss of the core dump.
+- `shell` Opens a shell session within the initramfs, allowing you to save the core dump manually.
+- `final_action` Specifies additional actions (like reboot, halt, or poweroff) to be performed after kdump completes or after a failure `action` (like shell or dump_to_rootfs) is executed. The default is reboot.
+- `failure_action` Specifies the action to take if a dump might fail during a kernel crash. The default is reboot.
+
+```bash
+failure_action poweroff
+```
 
 ## Controlling which events trigger a Kernel Panic
 
@@ -140,7 +176,7 @@ For permanent method use `kernelArguments` when configuring this parameters with
     - "mce=0"
 ```
 
-### Why KDUMP Configuration Matters
+### Why Configuration Matters
 
 Properly configuring both the crash triggers and memory reservation is essential for `kdump` to function as intended.
 
