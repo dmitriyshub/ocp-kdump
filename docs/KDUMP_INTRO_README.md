@@ -43,7 +43,10 @@ The `kdump` service uses a `core_collector` program to capture the crash dump im
 - Excluding unnecessary crash dump pages
 - Filtering the page types to be included in the crash dump
 
-The `makedumpfile` tool provides two essential options for this purpose, `-d` to minimize the dump file size and `--message-level` to control the verbosity of output during processing.
+The `makedumpfile` tool provides two options for this purpose
+
+- `-d` to minimize the dump file size
+- `--message-level` to control the verbosity of output during processing
 
 The `-d` option in makedumpfile allows you to exclude certain types of pages from the dump file, significantly reducing its size. This option is helpful in environments with limited storage or requiring quicker analysis.
 
@@ -91,6 +94,30 @@ By default, when kdump fails to save a crash dump file to the configured target 
 ```bash
 failure_action poweroff
 ```
+
+## Configuring the Kdump Kernel Key Parameters
+
+The kdump kernel behavior is controlled by the configuration file located at `/etc/sysconfig/kdump`. This file lets you fine-tune kdump operation by modifying the kernel command line parameters. While the default settings are sufficient for most use cases, there are scenarios where adjusting specific options can improve kdump performance or help troubleshoot issues.
+
+### Key Configuration Options
+
+The `KDUMP_COMMANDLINE_REMOVE` option is used to strip specific arguments from the kdump kernel command line. Removing certain parameters can help avoid errors or boot failures during the kdump process, especially if those parameters conflict with `kdump` operation. By default, this option inherits all values from the `/proc/cmdline` file, but you can customize it to remove problematic arguments.
+
+In this example, various arguments that could interfere with kdump are removed, helping to ensure a smooth operation:
+
+```bash
+KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb"
+```
+
+The `KDUMP_COMMANDLINE_APPEND` option allows you to add arguments to the kdump kernel command line. This can be useful for turning off certain kernel features that consume too much memory or cause issues with the kdump process.
+
+In this example, a comprehensive set of parameters is appended to the command line to optimize the kdump process. These parameters help minimize resource usage, disable unnecessary features, and ensure that the system is stable during the kdump operation.
+
+```bash
+KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off numa=off udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug transparent_hugepage=never novmcoredd hest_disable console=tty0 console=ttyS0,115200n8"
+```
+
+Adjusting the kdump kernel command line allows for greater control and flexibility in how kdump operates. By carefully selecting which parameters to remove or append, you can optimize the kdump process, avoid potential errors, and enhance your system reliability during critical failure scenarios.
 
 ## Controlling which events trigger a Kernel Panic
 
