@@ -31,7 +31,7 @@ The memory requirements vary based on certain system parameters. One of the majo
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. **Only one of these options to preserve a crash dump file can be set at a time**. The default behavior is to store it in the `/var/crash` directory of the local file system.
 
-**SSH Example:**
+### SSH Target Example
 
 ```bash
 path /target/path
@@ -39,17 +39,21 @@ ssh user@target.host.com
 sshkey /root/.ssh/mykey
 ```
 
-**NFS Example:**
+### NFS Target Example
 
 ```bash
 nfs target.nfs.com:/target/path
 ```
 
-**NOTE** When using the `NFS`or `SSH` directive, kdump automatically attempts to mount/connect the `NFS`/`SSH` target to check the disk space!
+### **NOTE**
 
-**NOTE** When you specify a dump target in the /etc/kdump.conf file, then the path is relative to the specified dump target!
+- When using the `NFS`or `SSH` directive, kdump automatically attempts to mount/connect the `NFS`/`SSH` target to check the disk space!
 
-**NOTE** When you do not specify a dump target in the /etc/kdump.conf file, then the path represents the absolute path from the root directory!
+- When you specify a dump target in the `/etc/kdump.conf` file, then the path is relative to the specified dump target!
+
+- When you do not specify a dump target in the `/etc/kdump.conf` file, then the path represents the absolute path from the root directory!
+
+### Extend Kdump Mechanism
 
 The `kdump_post` directive specifies a shell script or a command that is executed after kdump has completed capturing and saving a crash dump to the specified destination. You can use this mechanism to extend the functionality of kdump to perform actions including the adjustment of file permissions.
 
@@ -58,6 +62,36 @@ You can define a script for example `kdump_post.sh` in the `kdump.conf` file as 
 ```bash
 kdump_post <path_to_kdump_post.sh>
 ```
+
+### Supported Targets
+
+| Target Type       | Supported Targets                                                                 | Unsupported Targets                                                   |
+|-------------------|-----------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| **Physical Storage** | Logical Volume Manager (LVM)                                                      | BIOS RAID                                                              |
+|                   | Thin provisioning volume                                                          | Software iSCSI with iBFT                                               |
+|                   | Fibre Channel (FC) disks such as qla2xxx, lpfc, bnx2fc, and bfa                    | Currently supported transports are bnx2i, cxgb3i, and cxgb4i           |
+|                   | An iSCSI software-configured logical device on a networked storage server          | Software iSCSI with a hybrid device driver such as be2iscsi            |
+|                   | The mdraid subsystem as a software RAID solution                                   | Fibre Channel over Ethernet (FCoE)                                     |
+|                   | Hardware RAID such as cciss, hpsa, megaraid_sas, mpt2sas, and aacraid              | Legacy IDE                                                             |
+|                   | SCSI and SATA disks                                                               | GlusterFS servers                                                      |
+|                   | iSCSI and HBA offloads                                                            | GFS2 file system                                                       |
+|                   | Hardware FCoE such as qla2xxx and lpfc                                            | Clustered Logical Volume Manager (CLVM)                                |
+|                   |                                                                                   | High availability LVM volumes (HA-LVM)                                 |
+| **Network**       | Hardware using kernel modules: tg3, igb, ixgbe, sfc, e1000e, bna, cnic, netxen_nic, qlge, bnx2x, bnx, qlcnic, be2net, enic, virtio-net, ixgbevf, igbvf | IPv6 protocol                                  |
+|                   | IPv4 protocol                                                                     | Wireless connections                                                   |
+|                   | Network bonding on different devices, such as Ethernet devices or VLAN            | InfiniBand networks                                                    |
+|                   | VLAN network                                                                      | VLAN network over bridge and team                                      |
+|                   | Network Bridge                                                                    |                                                                        |
+|                   | Network Teaming                                                                   |                                                                        |
+|                   | Tagged VLAN and VLAN over a bond                                                  |                                                                        |
+|                   | Bridge network over bond, team, and VLAN                                          |                                                                        |
+| **Hypervisor**    | Kernel-based virtual machines (KVM)                                               |                                                                        |
+|                   | Xen hypervisor in certain configurations only                                     |                                                                        |
+|                   | VMware ESXi 4.1 and 5.1                                                           |                                                                        |
+|                   | Hyper-V 2012 R2 on RHEL Gen1 UP Guest only                                        |                                                                        |
+| **File Systems**  | The ext[234], XFS, and NFS file systems                                           | The Btrfs file system                                                  |
+| **Firmware**      | BIOS-based systems                                                                |                                                                        |
+|                   | UEFI Secure Boot                                                                  |                                                                        |
 
 ## Minimize Core Dump Files
 
@@ -105,6 +139,8 @@ core_collector makedumpfile -l --message-level 7 -d 31
 ```
 
 **NOTE** To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
+
+### Estimate the Crash Dump
 
 The `makedumpfile --mem-usage` command estimates how much space the crash dump file requires. It generates a memory usage report. The report helps you determine the dump level and which pages are safe to be excluded.
 
@@ -155,12 +191,12 @@ Adjusting the kdump kernel command line allows for greater control and flexibili
 
 When you enable kdump on a system, its important to understand the conditions under which a crash dump will be triggered. By default, `kdump` doesnt automatically trigger on every possible failure or crash scenario. it relies on specific kernel parameters to determine when to activate and capture a dump.
 
-**NOTE** Typically on `CoreOS` and similar immutable systems, `kdump` is configured to automatically capture a crash dump when a kernel panic occurs without requiring manual configuration of specific events but its important to understand them.
+**NOTE** Typically on `CoreOS` and similar immutable systems, `kdump` is configured to automatically capture a crash dump when a kernel panic occurs without requiring manual configuration of specific events but its important to understand them!
 
 Applying kernel parameters to control kdump behavior can be done in two primary ways:
 
-1. **PermanentMethod:** Through the kernel command line (e.g. via a `MachineConfig`)
-2. **Temporary Method:** By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`)
+1. Permanent Method - Through the kernel command line (e.g. via a `MachineConfig`)
+2. Temporary Method - By manually setting the parameters at runtime through system files (e.g. using echo commands in `/proc/sys/` or `/sys/`)
 
 ### Kernel Parameters Overview
 
@@ -278,7 +314,7 @@ Node Self Remediation Operator is a component that monitors node health and perf
 
 #### Operator Recommendations
 
-- **Monitor and Adjust Timeouts** Fine-tune the timeouts and intervals based on your environment performance and network conditions. For example, if your cluster nodes are slow to respond or network latency is high, you might need to adjust the timeouts accordingly
+- **Monitor and Adjust Timeouts** Fine-tune the timeouts and intervals based on your environment performance and network conditions. For example if your cluster nodes are slow to respond or network latency is high, you might need to adjust the timeouts accordingly
 - **Enable Software Reboot** Ensure that `isSoftwareRebootEnabled` is set to true so that the operator can handle crashes effectively, allowing the system to reboot and kdump to capture the necessary dump
 - **Configure Watchdog** Make sure that the `watchdogFilePath` is correctly set and that the hardware watchdog is functioning as expected to reset unresponsive nodes
 - **Test Remediation Actions** Perform testing to ensure that the `SNR` operator can handle various crash scenarios, including those where `kdump` is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected
@@ -287,17 +323,19 @@ By aligning these parameters and ensuring proper configuration, you can enhance 
 
 ## Testing the Configuration
 
-After configuring kdump, you must manually test a system crash and ensure the vmcore file is generated in the defined kdump target. The vmcore file is captured from the context of the freshly booted kernel and, therefore, has critical information to help debug a kernel crash.
+After configuring `kdump` you must manually test a system crash and ensure the `vmcore` file is generated in the defined kdump target. The `vmcore` file is captured from the context of the freshly booted kernel and, therefore, has critical information to help debug a kernel crash.
 
-**Warning**
-Do not test kdump on active production systems. The commands to test kdump will cause the kernel to crash with a loss of data. Ensure that you schedule significant maintenance time because kdump testing might require several reboots with a long boot time.
+### **Warning**
 
-If the vmcore file is not generated during the kdump test, its important to identify and fix issues before running the test again. This thorough troubleshooting is key to successful kdump testing.
+Do not test `kdump` on active production systems. The commands to test `kdump` will cause the kernel to crash with a loss of data. Ensure that you schedule significant maintenance time because `kdump` testing might require several reboots with a long boot time.
 
-**Important**
-Ensure you schedule significant maintenance time because kdump testing might require several reboots with a long boot time.
+If the `vmcore` file is not generated during the `kdump` test its important to identify and fix issues before running the test again. This thorough troubleshooting is key to successful kdump testing.
 
-If you make any manual system modifications, you must test the kdump configuration at the end of any system modification. For example, if you make any of the following changes, ensure that you test the kdump configuration for an optimal kdump performance:
+### **Important**
+
+Ensure you schedule significant maintenance time because `kdump` testing might require several reboots with a long boot time.
+
+If you make any manual system modifications, you must test the `kdump` configuration at the end of any system modification. For example, if you make any of the following changes, ensure that you test the `kdump` configuration for an optimal `kdump` performance:
 
 - Package upgrades
 - Hardware level changes, for example storage or networking changes
