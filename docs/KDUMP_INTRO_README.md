@@ -17,7 +17,7 @@ One of the key steps in configuring `kdump` is to reserve a portion of the syste
 
 ## Memory Requirements
 
-For kdump to capture a kernel crash dump and save it for further analysis, a part of the system memory should be permanently reserved for the capture kernel. When reserved, this part of the system memory is not available to the main kernel.
+For `kdump` to capture a kernel crash dump and save it for further analysis, a part of the system memory should be permanently reserved with `crashkernel` parameter for the capture kernel. When reserved, this part of the system memory is not available to the main kernel.
 
 The memory requirements vary based on certain system parameters. One of the major factors is the system hardware architecture.
 
