@@ -1,12 +1,12 @@
 # KDUMP MachineConfig Configuration
 
-This section outlines configuring kdump using MachineConfig in an OpenShift cluster environment. This method allows for centralized management of kdump settings across all nodes in the pool.
+This section describes how to configure kdump using MachineConfig within an OpenShift cluster environment. This method enables centralized management of kdump settings across all nodes in the pool, ensuring consistency and ease of maintenance.
 
 **NOTE:** Always Backup the configuration files!
 
-## Choose Your Preffered Target Path and Create Butane File
+## Prepare the Configuration Files
 
-Prepare a Butane configuration file to set up the kdump service:
+Start by preparing a Butane configuration file to set up the kdump service:
 
 ```yaml
 variant: openshift
@@ -68,11 +68,13 @@ systemd:
 
 **NOTE** The `makedumpfile -F` option is required only for the `SSH` target! If you are using local target, use `-l` instead!
 
+Consult these examples for reference:
+
 [Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
 
 ## Convert the Butane File to MachineConfig
 
-Convert the `Butane` file to a `YAML` configuration:
+After creating the Butane file, convert it to a YAML MachineConfig:
 
 ```bash
 butane 99-worker-kdump.bu -o 99-worker-kdump.yaml
@@ -80,32 +82,41 @@ butane 99-worker-kdump.bu -o 99-worker-kdump.yaml
 
 ## Apply the MachineConfig
 
-Use `oc` to apply the `MachineConfig`:
+Apply the MachineConfig to your cluster using the `oc` command:
 
 ```bash
 oc apply -f 99-worker-kdump.yaml
 ```
 
-## Monitor the MachineConfigPool Status to Ensure Updates are Applied
+## Monitor the MachineConfigPool Status
 
-Wait for the update to complete after the new configurations are applied. The status of the `machineconfigpool` will change to `Updated` once all nodes have applied the new configuration:
+Monitor the status of the `MachineConfigPool` to confirm that the update has been successfully applied to all nodes. The pool status will change to `Updated` once the new configuration is in effect:
 
 ```bash
 watch oc get nodes,mcp
 ```
 
-## Initiate Manual Kernel Crash Dump
+## Manually Trigger Kernel Crash Dump
 
-To manually trigger a kernel dump, use the following commands:
+To manually initiate a kernel dump use the following commands.
+
+- Check if kdump is active:
 
 ```bash
-# Check if kdump is active
 systemctl is-active kdump
+```
 
-# Checking that the kdump.service has started and exited successfully and prints 1
+- Verify that `kdump.service` started and exited successfully:
+
+```bash
 cat /sys/kernel/kexec_crash_loaded
+```
 
-# Trigger kernel dump
+A return value of 1 indicates success.
+
+- Trigger the kernel crash dump:
+
+```bash
 echo c > /proc/sysrq-trigger
 ```
 

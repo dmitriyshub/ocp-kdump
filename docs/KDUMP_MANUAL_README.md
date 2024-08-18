@@ -1,12 +1,14 @@
-# KDUMP Manual Configuration (Not Recommended)
+# KDUMP Manual Configuration
 
-This section provides guidance on manually configuring kdump for capturing crash dumps. Manual configuration is generally not recommended due to the potential errors and huge amount of nodes. Ensure you back up all configuration files before making changes. Use this guide if you need to manually adjust settings for specific scenarios.
+This section provides instructions for manually configuring kdump to capture crash dumps on CoreOS nodes. While manual configuration is generally not recommended due to the risk of errors and the large number of nodes involved, some scenarios may require specific adjustments. Always back up all relevant configuration files before making any changes.
 
 **NOTE:** Always Backup the configuration files!
 
 ## Prepare the Configuration Files
 
-Modify `/etc/kdump.conf` file:
+To manually configure kdump you need to prepare the following configuration files.
+
+- Prepare `/etc/kdump.conf` file:
 
 ```bash
 path /var/crash
@@ -14,7 +16,7 @@ core_collector makedumpfile -l --message-level 7 -d 31
 default shell
 ```
 
-Modify `/etc/sysconfig/kdump` file:
+- Prepare `/etc/sysconfig/kdump` file:
 
 ```bash
 KDUMP_COMMANDLINE_REMOVE="hugepages hugepagesz slub_debug quiet log_buf_len swiotlb"
@@ -23,12 +25,14 @@ KEXEC_ARGS="-s"
 KDUMP_IMG="vmlinuz"
 ```
 
+Consult these examples for reference:
+
 | [Configuration Files Examples](../examples/kdump-conf-files/) | [Local Target Examples](../examples/kdump-local-path/) | [SSH Target Examples](../examples/kdump-ssh-path/) |
 |---------------------------------------------------------------|--------------------------------------------------------|----------------------------------------------------|
 
-## Configure crashkernel Parameter and Enable Kdump
+## Configure and Enable Kdump
 
-Configure the `crashkernel` parameter, enable kdump and ensure its ready by rebuilding the `initramfs` and restarting the service:
+Follow these steps to configure the `crashkernel` parameter, enable `kdump` and ensure it is ready by rebuilding the `initramfs` and restarting the service:
 
 ```bash
 # Add crashkernel parameter
@@ -44,7 +48,7 @@ kdumpctl restart
 
 ## Prepare the Node for Rebooting
 
-Ensure a safe reboot by cordoning and draining the node, then initiate the reboot:
+To ensure a safe reboot `cordon` and `drain` the node and then reboot it:
 
 ```bash
 oc adm cordon <node-name>
@@ -54,18 +58,27 @@ chroot /host
 systemctl reboot
 ```
 
-## Initiate Manual Kernel Crash Dump
+## Manually Trigger Kernel Crash Dump
 
-To manually trigger a kernel dump, use the following commands:
+To manually initiate a kernel dump use the following commands.
+
+- Check if kdump is active:
 
 ```bash
-# Check if kdump is active
 systemctl is-active kdump
+```
 
-# Checking that the kdump.service has started and exited successfully and prints 1
+- Verify that `kdump.service` started and exited successfully:
+
+```bash
 cat /sys/kernel/kexec_crash_loaded
+```
 
-# Trigger kernel dump
+A return value of 1 indicates success.
+
+- Trigger the kernel crash dump:
+
+```bash
 echo c > /proc/sysrq-trigger
 ```
 
