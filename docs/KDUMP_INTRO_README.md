@@ -31,6 +31,8 @@ The memory requirements vary based on certain system parameters. One of the majo
 
 The crash dump or `vmcore` is usually stored as a file in a local file system, written directly to a device. Alternatively, you can set up for the crash dump to be sent over a network using the `NFS` or `SSH` protocols. **Only one of these options to preserve a crash dump file can be set at a time**. The default behavior is to store it in the `/var/crash` directory of the local file system.
 
+View the supported targets [here](./KDUMP_TARGETSUP_README.md)
+
 ### SSH Target Example
 
 ```bash
