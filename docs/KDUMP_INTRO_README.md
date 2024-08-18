@@ -15,15 +15,11 @@ One of the key steps in configuring `kdump` is to reserve a portion of the syste
 3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
 4. The normal kernel's memory is captured into a `vmcore`
 
-## Memory requirements
+## Memory Requirements
 
 For kdump to capture a kernel crash dump and save it for further analysis, a part of the system memory should be permanently reserved for the capture kernel. When reserved, this part of the system memory is not available to the main kernel.
 
 The memory requirements vary based on certain system parameters. One of the major factors is the system hardware architecture.
-
-```bash
-uname -m
-```
 
 | Architecture               | Available Memory  | Minimum Reserved Memory |
 |----------------------------|-------------------|-------------------------|
@@ -151,7 +147,7 @@ KDUMP_COMMANDLINE_APPEND="irqpoll nr_cpus=1 reset_devices cgroup_disable=memory 
 
 Adjusting the kdump kernel command line allows for greater control and flexibility in how kdump operates. By carefully selecting which parameters to remove or append, you can optimize the kdump process, avoid potential errors, and enhance your system reliability during critical failure scenarios.
 
-## Controlling which events trigger a Kernel Panic
+## Controlling Which Events Trigger a Kernel Panic
 
 When you enable kdump on a system, its important to understand the conditions under which a crash dump will be triggered. By default, `kdump` doesnt automatically trigger on every possible failure or crash scenario. it relies on specific kernel parameters to determine when to activate and capture a dump.
 
