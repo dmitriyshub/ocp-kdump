@@ -23,8 +23,8 @@ The memory requirements vary based on certain system parameters. One of the majo
 
 | Architecture               | Available Memory  | Minimum Reserved Memory |
 |----------------------------|-------------------|-------------------------|
-| AMD64 and Intel 64 (x86_64)| 1 GB to 4 GB      | 192 MB of RAM           |
-|                            | 4 GB to 64 GB     | 256 MB of RAM           |
+|                            | 1 GB to 4 GB      | 192 MB of RAM           |
+| AMD64 and Intel 64 (x86_64)| 4 GB to 64 GB     | 256 MB of RAM           |
 |                            | 64 GB and more    | 512 MB of RAM           |
 
 ## Crash Dump Target Path
