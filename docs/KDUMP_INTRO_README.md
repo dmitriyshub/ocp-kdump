@@ -73,7 +73,7 @@ The `makedumpfile` tool provides three options for this purpose
 - `-d` to minimize the dump file size
 - `--message-level` to control the verbosity of output during processing
 
-**NOTE** Output the dump data in the flattened format to the standard output for transporting the dump data by SSH!
+**NOTE** `-F` output the dump data in the flattened format to the standard output for transporting the dump data by SSH!
 
 The `-d` option in makedumpfile allows you to exclude certain types of pages from the dump file, significantly reducing its size. This option is helpful in environments with limited storage or requiring quicker analysis.
 
