@@ -46,12 +46,14 @@ nfs target.nfs.com:/target/path
 ```
 
 **NOTE** When using the `NFS`or `SSH` directive, kdump automatically attempts to mount/connect the `NFS`/`SSH` target to check the disk space!
+
 **NOTE** When you specify a dump target in the /etc/kdump.conf file, then the path is relative to the specified dump target!
+
 **NOTE** When you do not specify a dump target in the /etc/kdump.conf file, then the path represents the absolute path from the root directory!
 
-The kdump_post directive specifies a shell script or a command that is executed after kdump has completed capturing and saving a crash dump to the specified destination. You can use this mechanism to extend the functionality of kdump to perform actions including the adjustment of file permissions.
+The `kdump_post` directive specifies a shell script or a command that is executed after kdump has completed capturing and saving a crash dump to the specified destination. You can use this mechanism to extend the functionality of kdump to perform actions including the adjustment of file permissions.
 
-You can define a script, for example `kdump_post.sh` in the `kdump.conf` file as follows:
+You can define a script for example `kdump_post.sh` in the `kdump.conf` file as follows:
 
 ```bash
 kdump_post <path_to_kdump_post.sh>
@@ -70,6 +72,8 @@ The `makedumpfile` tool provides three options for this purpose
 - `-c, -l or -p` specify compress dump file format by each page using either, `zlib` for `-c`, `lzo` for `-l` or `snappy` for `-p` option
 - `-d` to minimize the dump file size
 - `--message-level` to control the verbosity of output during processing
+
+**NOTE** Output the dump data in the flattened format to the standard output for transporting the dump data by SSH!
 
 The `-d` option in makedumpfile allows you to exclude certain types of pages from the dump file, significantly reducing its size. This option is helpful in environments with limited storage or requiring quicker analysis.
 
