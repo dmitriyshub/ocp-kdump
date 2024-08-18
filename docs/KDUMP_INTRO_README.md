@@ -1,4 +1,4 @@
-# KDUMP Introduction and Key Concepts
+# Introduction and Key Concepts
 
 `Kdump` is a kernel feature that allows crash dumps to be created during a kernel crash. It produces a `vmcore`(a system-wide coredump), which is the recorded state of the working memory in the host at the time of the crash, that can be analyzed for the root cause analysis of the crash.
 
@@ -14,6 +14,22 @@ One of the key steps in configuring `kdump` is to reserve a portion of the syste
 2. The system panics
 3. The `kdump` kernel is booted using kexec, it used the memory area that was reserved w/ the `crashkernel` parameter
 4. The normal kernel's memory is captured into a `vmcore`
+
+## Memory requirements
+
+For kdump to capture a kernel crash dump and save it for further analysis, a part of the system memory should be permanently reserved for the capture kernel. When reserved, this part of the system memory is not available to the main kernel.
+
+The memory requirements vary based on certain system parameters. One of the major factors is the system hardware architecture.
+
+```bash
+uname -m
+```
+
+| Architecture               | Available Memory  | Minimum Reserved Memory |
+|----------------------------|-------------------|-------------------------|
+| AMD64 and Intel 64 (x86_64)| 1 GB to 4 GB      | 192 MB of RAM           |
+|                            | 4 GB to 64 GB     | 256 MB of RAM           |
+|                            | 64 GB and more    | 512 MB of RAM           |
 
 ## Crash Dump Target Path
 
@@ -34,6 +50,16 @@ nfs target.nfs.com:/target/path
 ```
 
 **NOTE** When using the `NFS`or `SSH` directive, kdump automatically attempts to mount/connect the `NFS`/`SSH` target to check the disk space!
+**NOTE** When you specify a dump target in the /etc/kdump.conf file, then the path is relative to the specified dump target!
+**NOTE** When you do not specify a dump target in the /etc/kdump.conf file, then the path represents the absolute path from the root directory!
+
+The kdump_post directive specifies a shell script or a command that is executed after kdump has completed capturing and saving a crash dump to the specified destination. You can use this mechanism to extend the functionality of kdump to perform actions including the adjustment of file permissions.
+
+You can define a script, for example `kdump_post.sh` in the `kdump.conf` file as follows:
+
+```bash
+kdump_post <path_to_kdump_post.sh>
+```
 
 ## Minimize Core Dump Files
 
@@ -43,8 +69,9 @@ The `kdump` service uses a `core_collector` program to capture the crash dump im
 - Excluding unnecessary crash dump pages
 - Filtering the page types to be included in the crash dump
 
-The `makedumpfile` tool provides two options for this purpose
+The `makedumpfile` tool provides three options for this purpose
 
+- `-c, -l or -p` specify compress dump file format by each page using either, `zlib` for `-c`, `lzo` for `-l` or `snappy` for `-p` option
 - `-d` to minimize the dump file size
 - `--message-level` to control the verbosity of output during processing
 
@@ -78,6 +105,11 @@ core_collector makedumpfile -l --message-level 7 -d 31
 ```
 
 **NOTE** To ensure sufficient storage for vmcore dumps, it's **recommended** that storage space be at least equal to the total RAM on the server. While predicting vmcore size with 100% accuracy isn't possible, analyzing over 1500 vmcores from various Red Hat Enterprise Linux versions showed that using the default dump_level setting of `-d 31` typically results in vmcores under 10% of RAM.
+
+The `makedumpfile --mem-usage` command estimates how much space the crash dump file requires. It generates a memory usage report. The report helps you determine the dump level and which pages are safe to be excluded.
+
+**Important**
+The `makedumpfile --mem-usage` command reports required memory in pages. This means that you must calculate the size of memory in use against the kernel page size, By default the RHEL kernel uses 4 KB sized pages on AMD64 and Intel 64 CPU architectures, and 64 KB sized pages on IBM POWER architectures.
 
 ## Configuring Default Failure Responses
 
@@ -252,6 +284,26 @@ Node Self Remediation Operator is a component that monitors node health and perf
 - **Test Remediation Actions** Perform testing to ensure that the `SNR` operator can handle various crash scenarios, including those where `kdump` is triggered. Verify that the system captures dumps and that remediation actions (like reboots) occur as expected
 
 By aligning these parameters and ensuring proper configuration, you can enhance the effectiveness of `kdump` and the Node Self Remediation Operator in managing and recovering from crashes in a cluster environment.
+
+## Testing the Configuration
+
+After configuring kdump, you must manually test a system crash and ensure the vmcore file is generated in the defined kdump target. The vmcore file is captured from the context of the freshly booted kernel and, therefore, has critical information to help debug a kernel crash.
+
+**Warning**
+Do not test kdump on active production systems. The commands to test kdump will cause the kernel to crash with a loss of data. Ensure that you schedule significant maintenance time because kdump testing might require several reboots with a long boot time.
+
+If the vmcore file is not generated during the kdump test, its important to identify and fix issues before running the test again. This thorough troubleshooting is key to successful kdump testing.
+
+**Important**
+Ensure you schedule significant maintenance time because kdump testing might require several reboots with a long boot time.
+
+If you make any manual system modifications, you must test the kdump configuration at the end of any system modification. For example, if you make any of the following changes, ensure that you test the kdump configuration for an optimal kdump performance:
+
+- Package upgrades
+- Hardware level changes, for example storage or networking changes
+- Firmware and BIOS upgrades
+- New installation and application upgrades that include third party modules
+- If you use the hot-plugging mechanism to add more memory to the hardware that supports this mechanism
 
 ## Kdump Testing Summary Steps
 
