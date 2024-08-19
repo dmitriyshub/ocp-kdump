@@ -70,7 +70,8 @@ systemd:
 
 Consult these examples for reference:
 
-[Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/)
+| [Local Path Examples](../examples/kdump-local-path/) | [SSH Path Examples](../examples/kdump-ssh-path/) |
+|------------------------------------------------------|--------------------------------------------------|
 
 ## Convert the Butane File to MachineConfig
 
