@@ -6,7 +6,7 @@ This summary will guide the reviewer through the KDUMP implementation and docume
 
 1. Complete the kdump guide, which focuses on the crash tool analysis guide and vmcore file analysis. The objective is to ensure the guide is comprehensive, logically structured, and user-friendly, enabling users to implement and troubleshoot kdump in OpenShift environments effectively - [KDUMP in OpenShift CoreOS Baremetal Nodes Guide](https://gitlab.med.one/compute/ocp-kdump)
 
-2. Review the merge request for MachineConfig deployment. The goal is to ensure that MachineConfig is implemented correctly, is easily reproducible, and aligns with the best practices outlined in the KDUMP guide - [KDUMP MachineConfig Merge Request !320](https://gitlab.med.one/compute/ocpbm-cluster-config/-/merge_requests/320)
+2. Review the merge request for MachineConfig deployment. The goal is to ensure that MachineConfig is implemented correctly, is easily reproducible, and aligns with the best practices outlined in the KDUMP guide - [KDUMP MachineConfig Merge Request]()
 
 **NOTE** This merge request implements the kdump local path configuration due to an identified bug in the kexec-tools affecting the SSH target path in the current OpenShift version. We plan to use the SSH target path once our clusters are upgraded to OpenShift version 4.14!
 
@@ -32,7 +32,7 @@ The following sections are the most important and should be reviewed in detail!
 
 - You can find vmcore files on the `phmowrk-166014-15` node under the `/var/crash` directory. If needed, you can manually trigger a crash on the host to generate a new vmcore file for analysis
 
-- Utilize the preconfigured kdump-crash-tool images available in [Medone Quay Container Registry](https://quay.med.one:8443/repository/openshift/kdump-crash-tool?tab=tags)
+- Utilize the preconfigured kdump-crash-tool images available in [Quay Container Registry]()
 
 1. `4.18.0-372.73.1` this is the default image tag, designed to work with a mounted vmcore file
 
