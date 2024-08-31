@@ -4,7 +4,7 @@ The KDUMP repository provides a comprehensive guide for configuring and troubles
 
 This summary will guide the reviewer through the KDUMP implementation and documentation review process. The review is divided into two primary sections:
 
-1. Complete the kdump guide, which focuses on the crash tool analysis guide and vmcore file analysis. The objective is to ensure the guide is comprehensive, logically structured, and user-friendly, enabling users to implement and troubleshoot kdump in OpenShift environments effectively - [KDUMP in OpenShift CoreOS Baremetal Nodes Guide](https://gitlab.med.one/compute/ocp-kdump)
+1. Complete the kdump guide, which focuses on the crash tool analysis guide and vmcore file analysis. The objective is to ensure the guide is comprehensive, logically structured, and user-friendly, enabling users to implement and troubleshoot kdump in OpenShift environments effectively - [KDUMP in OpenShift CoreOS Baremetal Nodes Guide](https://github.com/dmitriyshub/ocp-kdump)
 
 2. Review the merge request for MachineConfig deployment. The goal is to ensure that MachineConfig is implemented correctly, is easily reproducible, and aligns with the best practices outlined in the KDUMP guide - [KDUMP MachineConfig Merge Request]()
 
